@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <string>
 #include "lua.hpp"
+//#include "lua/M2main.cpp"
 
 void dumpError(lua_State* L)
 {
@@ -38,6 +39,13 @@ int main()
 	std::cout << "Hello from c++" << "\n";
 
 	std::thread consoleThread(luaThreadLoop, L);
+
+	std::cout << "Before: " << lua_gettop(L) << std::endl;
+	luaL_dofile(L, "lua/fail.lua");
+	std::cout << "After: " << lua_gettop(L) << std::endl;
+	std::string luaString = lua_tostring(L, -1);
+	
+	std::cout << luaString;
 
 	while (true)
 	{

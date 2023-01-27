@@ -159,11 +159,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="lua\M2main.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="lua\entity.lua" />
-    <None Include="lua\ex_7.lua" />
+    <None Include="lua\fail.lua" />
+    <None Include="lua\fizz.lua" />
+    <None Include="lua\M1\entity.lua" />
+    <None Include="lua\M1\ex_7.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
