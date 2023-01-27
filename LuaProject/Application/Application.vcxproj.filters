@@ -18,9 +18,14 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="lua\M2main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="lua\ex_7.lua" />
-    <None Include="lua\entity.lua" />
+    <None Include="lua\M1\entity.lua" />
+    <None Include="lua\M1\ex_7.lua" />
+    <None Include="lua\fizz.lua" />
+    <None Include="lua\fail.lua" />
   </ItemGroup>
 </Project>
