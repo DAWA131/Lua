@@ -38,7 +38,7 @@ int main()
 
 	while (true)
 	{
-
+		//run game here
 	}
 
 	return 0;
