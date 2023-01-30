@@ -161,10 +161,15 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="lua\Dino.lua" />
     <None Include="lua\fail.lua" />
     <None Include="lua\fizz.lua" />
     <None Include="lua\M1\entity.lua" />
     <None Include="lua\M1\ex_7.lua" />
+    <None Include="lua\transform.lua" />
+    <None Include="lua\transformDemo.lua" />
+    <None Include="lua\vector.lua" />
+    <None Include="lua\vectorDemo.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

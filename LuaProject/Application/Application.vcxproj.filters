@@ -27,5 +27,10 @@
     <None Include="lua\M1\ex_7.lua" />
     <None Include="lua\fizz.lua" />
     <None Include="lua\fail.lua" />
+    <None Include="lua\Dino.lua" />
+    <None Include="lua\vector.lua" />
+    <None Include="lua\vectorDemo.lua" />
+    <None Include="lua\transform.lua" />
+    <None Include="lua\transformDemo.lua" />
   </ItemGroup>
 </Project>
