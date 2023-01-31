@@ -193,6 +193,20 @@ void lua_pushvector(lua_State* L, const vector3& vec)
 	lua_setfield(L, -2, "Z");
 }
 
+void lua_pushtransform(lua_State* L, const transform& matrix)
+{
+	lua_newtable(L);
+
+	lua_pushvector(L, matrix.p);
+	lua_setfield(L, -2, "position");
+
+	lua_pushvector(L, matrix.r);
+	lua_setfield(L, -2, "rotation");
+
+	lua_pushvector(L, matrix.s);
+	lua_setfield(L, -2, "scale");
+}
+
 static int RandomVector(lua_State* L)
 {
 	if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2))
@@ -211,31 +225,55 @@ static int RandomVector(lua_State* L)
 	return 1;
 }
 
+static int RandomTransformation(lua_State* L)
+{
+	lua_newtable(L);
+
+	lua_pushnumber(L, 1);
+	lua_pushnumber(L, 2);
+	RandomVector(L);
+	lua_setfield(L, -2, "position");
+
+	lua_pushnumber(L, 1);
+	lua_pushnumber(L, 2);
+	RandomVector(L);
+	lua_setfield(L, -2, "rotation");
+
+	lua_pushnumber(L, 1);
+	lua_pushnumber(L, 2);
+	RandomVector(L);
+	lua_setfield(L, -2, "scale");
+	return 1;
+}
+
 int main()
 {
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 	std::cout << "Hello from c++" << "\n";
 
-	//std::thread consoleThread(luaThreadLoop, L);
+	std::thread consoleThread(luaThreadLoop, L);
 
-	doLuaFile(L, "lua/vector.lua");
+	//doLuaFile(L, "lua/vector.lua");
 
-	lua_pushcfunction(L, PrintVector);
-	lua_setglobal(L, "PrintVector");
+	//lua_pushcfunction(L, PrintVector);
+	//lua_setglobal(L, "PrintVector");
 
-	lua_pushcfunction(L, PrintTransform);
-	lua_setglobal(L, "PrintTransform");
+	//lua_pushcfunction(L, PrintTransform);
+	//lua_setglobal(L, "PrintTransform");
 
-	lua_pushcfunction(L, RandomVector);
-	lua_setglobal(L, "RandomVector");
+	//lua_pushcfunction(L, RandomVector);
+	//lua_setglobal(L, "RandomVector");
 
-	doLuaFile(L, "lua/transformDemo.lua");
+	//lua_pushcfunction(L, RandomTransformation);
+	//lua_setglobal(L, "RandomTransformation");
+
+	//doLuaFile(L, "lua/transformDemo.lua");
 
 	int bp = 2;
 	while (true)
 	{
-		return 0;
+		//return 0;
 		//run game here
 	}
 
