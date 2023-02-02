@@ -1,5 +1,6 @@
 #include "iostream"
 #include <thread>
+#include "entt\entt.hpp"
 #include <Windows.h>
 #include <string>
 #include "lua.hpp"
@@ -30,6 +31,8 @@ void luaThreadLoop(lua_State* L)
 
 int main()
 {
+
+	entt::registry reg;
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 	std::cout << "Hello from c++" << "\n";
