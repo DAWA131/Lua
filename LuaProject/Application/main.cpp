@@ -247,6 +247,16 @@ static int RandomTransformation(lua_State* L)
 	return 1;
 }
 
+struct Health
+{
+	float value;
+};
+
+struct Poison
+{
+	float tickDmg;
+};
+
 int main()
 {
 
@@ -273,12 +283,63 @@ int main()
 
 	//doLuaFile(L, "lua/transformDemo.lua");
 
+	srand(time(NULL));
+
+	for (int i = 0; i < 100; i++)
+	{
+		auto entity = reg.create();
+
+		reg.emplace<Health>(entity, 100.f);
+
+		float tickdmg = rand() % 10 + 1;
+		reg.emplace<Poison>(entity, tickdmg);
+	}
+
+	int iterations = 0;
+	bool cured = false;
+	while (reg.alive() && !cured)
+	{
+		if (rand()%20 == 0)
+		{
+			auto view = reg.view<Poison>();
+			view.each([&](entt::entity entity, const Poison& posison)
+				{
+					reg.remove<Poison>(entity);
+				});
+			std::cout << "all entities cured!\n";
+			bool cured = true;
+		}
+
+		if (rand()%5 == 0)
+		{
+			auto view = reg.view<Health>(entt::exclude<Poison>);
+			view.each([&](entt::entity entity, const Health& health)
+				{
+					float tickDmg = rand() % 10 + 1;
+					reg.emplace<Poison>(entity, tickDmg);
+					std::cout << "Entity: " << (int)entity << " has been poisoned\n";
+				});
+		}
+
+		{
+			auto view = reg.view<Health, Poison>();
+
+			view.each([](Health& health, const Poison& poison) { health.value -= poison.tickDmg; });
+		}
+		auto view = reg.view<Health>();
+		view.each([&](entt::entity entity, const Health& health) {if (health.value <= 0.f) reg.destroy(entity); });
+
+		iterations++;
+		std::cout << "Iteration " << iterations
+			 << ", entities alive: " << reg.alive()
+			 << std::endl;
+	}
+
 	int bp = 2;
 	while (true)
 	{
-		//return 0;
+		//return 0;;
 		//run game here
 	}
-
 	return 0;
 }
