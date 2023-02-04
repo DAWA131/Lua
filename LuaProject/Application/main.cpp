@@ -39,6 +39,8 @@ int main()
 
 	std::thread consoleThread(luaThreadLoop, L);
 
+	entt::registry registry;
+
 	while (true)
 	{
 
