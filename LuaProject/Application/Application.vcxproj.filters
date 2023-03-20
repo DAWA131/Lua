@@ -21,6 +21,9 @@
     <ClCompile Include="lua\M2main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="lua\M1\entity.lua" />
@@ -32,5 +35,10 @@
     <None Include="lua\vectorDemo.lua" />
     <None Include="lua\transform.lua" />
     <None Include="lua\transformDemo.lua" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Scene.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

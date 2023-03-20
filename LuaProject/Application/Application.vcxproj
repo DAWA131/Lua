@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="lua\M2main.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lua\Dino.lua" />
@@ -172,6 +173,9 @@
     <None Include="lua\transformDemo.lua" />
     <None Include="lua\vector.lua" />
     <None Include="lua\vectorDemo.lua" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Scene.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
