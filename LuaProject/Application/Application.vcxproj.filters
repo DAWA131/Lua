@@ -19,4 +19,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="transform.lua" />
+    <None Include="transformDemo.lua" />
+    <None Include="vector.lua" />
+  </ItemGroup>
 </Project>
