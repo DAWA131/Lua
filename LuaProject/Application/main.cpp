@@ -6,6 +6,7 @@
 #include "lua.hpp"
 #include <iomanip>
 #include <cassert>
+#include "Scene.hpp"
 //#include "lua/M2main.cpp"
 
 void dumpError(lua_State* L)
@@ -247,16 +248,6 @@ static int RandomTransformation(lua_State* L)
 	return 1;
 }
 
-struct Health
-{
-	float value;
-};
-
-struct Poison
-{
-	float tickDmg;
-};
-
 int main()
 {
 
@@ -295,9 +286,14 @@ int main()
 		reg.emplace<Poison>(entity, tickdmg);
 	}
 
+	Scene scene;
+	scene.CreateSystem<PoisonSystem>(5);
+	scene.UpdateSystems(1);
+
 	int iterations = 0;
 	bool cured = false;
-	while (reg.alive() && !cured)
+	/*
+	while (reg.alive() && !cured && false)
 	{
 		if (rand()%20 == 0)
 		{
@@ -334,6 +330,7 @@ int main()
 			 << ", entities alive: " << reg.alive()
 			 << std::endl;
 	}
+	*/
 
 	int bp = 2;
 	while (true)
