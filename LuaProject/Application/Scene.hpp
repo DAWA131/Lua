@@ -1,38 +1,8 @@
 #include "entt\entt.hpp"
-
-struct Health
-{
-	float Value;
-};
-
-struct Poison
-{
-	float TickDamage;
-};
-
-class System
-{
-public:
-	virtual bool OnUpdate(entt::registry& registry, float delta) = 0;
-};
-
-class PoisonSystem : public System
-{
-	int m_lifetime;
-
-public:
-
-	PoisonSystem(int lifetime) : m_lifetime(lifetime) {}
-	bool OnUpdate(entt::registry& registry, float delta)
-	{
-		auto view = registry.view<Health, Poison>();
-		view.each([](Health& health, const Poison& poison) {
-			health.Value -= poison.TickDamage;
-			});
-
-		return (--m_lifetime) <= 0;
-	}
-};
+#include "lua.hpp"
+#include "Components.hpp"
+#include "Systems.hpp"
+#include <iostream>
 
 class Scene
 {
@@ -42,6 +12,8 @@ class Scene
 public:
 	Scene();
 	~Scene();
+
+	static void lua_openscene(lua_State* L, Scene* scene);
 
 	int GetEntityCount();
 	int CreateEntity();
@@ -64,6 +36,17 @@ public:
 	template<typename T, typename...Args>
 	void CreateSystem(Args... args);
 	void UpdateSystems(float delta);
+
+private:
+	static Scene* lua_GetSceneUpValue(lua_State* L);
+	static int lua_GetEntityCount(lua_State* L);
+	static int lua_CreateEntity(lua_State* L);
+	static int lua_IsEntity(lua_State* L);
+	static int lua_RemoveEntity(lua_State* L);
+	static int lua_HasComponent(lua_State* L);
+	static int lua_GetComponent(lua_State* L);
+	static int lua_SetComponent(lua_State* L);
+	static int lua_RemoveComponent(lua_State* L);
 };
 
 template<typename ...Args>
@@ -99,5 +82,5 @@ inline void Scene::RemoveComponent(int entity)
 template<typename T, typename ...Args>
 inline void Scene::CreateSystem(Args ...args)
 {
-	m_systems.emplace_back(new T(args...));
+	this->m_systems.emplace_back(new T(args...));
 }

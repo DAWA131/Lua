@@ -95,6 +95,7 @@ int main()
 	luaL_openlibs(L);
 	std::cout << "Hello from c++" << "\n";
 
+	/*
 	//POISON example
 	//srand(time(NULL));
 	//for (int i = 0; i < 100; i++)
@@ -160,10 +161,22 @@ int main()
 	//	iterations++;
 	//	std::cout << "Iteration " << iterations << ", entities alive: " << registry.alive() << std::endl;
 	//}
+	*/
+	
 
 	Scene scene;
-	scene.CreateSystem<PoisonSystem>(5);
-	scene.UpdateSystems(1);
+	Scene::lua_openscene(L, &scene);
+	scene.CreateSystem<CleanupSystem>();
+	scene.CreateSystem<PoisonSystem>(100);
+	scene.CreateSystem<InfoSystem>();
+	luaL_dofile(L, "sceneDemo.lua");
+	dumpError(L);
+	for (int i = 0; i < 100; i++){}
+
+	while (scene.GetEntityCount() != 0)
+	{
+		scene.UpdateSystems(1);	
+	}
 
 	std::thread consoleThread(luaThreadLoop, L);
 
