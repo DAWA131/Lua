@@ -26,9 +26,14 @@
     <None Include="transform.lua" />
     <None Include="transformDemo.lua" />
     <None Include="vector.lua" />
+    <None Include="sceneDemo.lua" />
+    <None Include="monster.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

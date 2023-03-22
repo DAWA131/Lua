@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "Scene.hpp"
+#include "Components.hpp"
 
 void dumpError(lua_State* L)
 {
@@ -88,6 +89,88 @@ void dumpStack(lua_State* L)
 	std::cout << std::string(12, '-') << std::endl;
 }
 
+class PoisonSystem : public System
+{
+	int m_lifetime;
+
+public:
+
+	PoisonSystem(int lifetime) : m_lifetime(lifetime) {}
+	bool OnUpdate(entt::registry& registry, float delta) final
+	{
+		auto view = registry.view<Health, Poison>();
+		view.each([](Health& health, const Poison& poison) {
+			health.Value -= poison.TickDamage;
+			//std::cout << "LIFE " << health.Value << "\n";
+			});
+
+		return (--m_lifetime) <= 0;
+	}
+};
+
+class CleanupSystem : public System
+{
+public:
+	bool OnUpdate(entt::registry& registry, float delta) final
+	{
+		auto view = registry.view<Health>();
+		view.each([&](entt::entity entity, const Health& health) {
+			if (health.Value <= 0.f)
+			{
+				registry.destroy(entity);
+			}
+			});
+
+		return false;
+	}
+};
+
+class InfoSystem : public System
+{
+	int m_updateCounter = 0;
+
+public:
+	InfoSystem() = default;
+	bool OnUpdate(entt::registry& registry, float delta) final
+	{
+		int count = registry.alive();
+		auto healthView = registry.view<Health>();
+		auto poisonView = registry.view<Poison>();
+
+		printf("\n-- Update %i --n", ++m_updateCounter);
+		printf(" Living entities:\t%i\n", healthView.size());
+		printf(" Poisoned entities:\t%i\n", poisonView.size());
+		return false;
+	}
+};
+
+class BehaviourSystem : public System
+{
+	lua_State* L;
+
+public:
+	BehaviourSystem(lua_State* L) : L(L) {}
+
+	bool OnUpdate(entt::registry& registry, float delta) final
+	{
+		auto view = registry.view<Behaviour>();
+		view.each([&](Behaviour& script) {
+			lua_rawgeti(L, LUA_REGISTRYINDEX, script.LuaRef);
+			lua_getfield(L, -1, "OnUpdate");
+			lua_pushvalue(L, -2);
+			lua_pushnumber(L, delta);
+
+			if (lua_pcall(L, 1, 0, 0) != LUA_OK)
+			{
+				dumpError(L);
+			}
+
+			lua_pop(L, 1);
+		});
+		return false;
+	}
+};
+
 int main()
 {
 	entt::registry registry;
@@ -96,75 +179,83 @@ int main()
 	std::cout << "Hello from c++" << "\n";
 
 	//POISON example
-	//srand(time(NULL));
-	//for (int i = 0; i < 100; i++)
-	//{
-	//	auto entity = registry.create();
-	//	registry.emplace<Health>(entity, 100.f);
-	//	float tickDamage = rand() % 10 + 1;
-	//	registry.emplace<Poison>(entity, tickDamage);
-	//}
+	srand(time(NULL));
+	/*for (int i = 0; i < 100; i++)
+	{
+		auto entity = registry.create();
+		registry.emplace<Health>(entity, 100.f);
+		float tickDamage = rand() % 10 + 1;
+		registry.emplace<Poison>(entity, tickDamage);
+	}*/
 
-	//int iterations = 0;
-	//while (registry.alive())
-	//{
-	//	//Poison system
-	//	{
-	//		auto view = registry.view<Health, Poison>();
-	//		view.each([](Health& health, const Poison& poison)
-	//			{
-	//				health.Value -= poison.TickDamage;
-	//			});
-	//	}
+	/*int iterations = 0;
+	while (registry.alive())
+	{
+		//Poison system
+		{
+			auto view = registry.view<Health, Poison>();
+			view.each([](Health& health, const Poison& poison)
+				{
+					health.Value -= poison.TickDamage;
+				});
+		}
 
-	//	//Cleanup system
-	//	{
-	//		auto view = registry.view<Health>();
-	//		view.each([&](entt::entity entity, const Health& health)
-	//			{
-	//				if (health.Value <= 0.f)
-	//				{
-	//					registry.destroy(entity);
-	//				}
-	//			});
-	//	}
+		//Cleanup system
+		{
+			auto view = registry.view<Health>();
+			view.each([&](entt::entity entity, const Health& health)
+				{
+					if (health.Value <= 0.f)
+					{
+						registry.destroy(entity);
+					}
+				});
+		}
 
-	//	//Cure system
-	//	{
-	//		float cure = rand() % 20;
-	//		if (cure == 0)
-	//		{
-	//			auto view = registry.view<Poison>();
-	//			view.each([&](entt::entity entity, const Poison& poison)
-	//				{
-	//					registry.remove<Poison>(entity);
-	//					//std::cout << "Cured\n";
-	//				});
-	//		}
-	//	}
+		//Cure system
+		{
+			float cure = rand() % 20;
+			if (cure == 0)
+			{
+				auto view = registry.view<Poison>();
+				view.each([&](entt::entity entity, const Poison& poison)
+					{
+						registry.remove<Poison>(entity);
+						//std::cout << "Cured\n";
+					});
+			}
+		}
 
-	//	//Spawn poison system
-	//	{
-	//		auto view = registry.view<Health>(entt::exclude<Poison>);
-	//		view.each([&](entt::entity entity, const Health& health)
-	//			{
-	//				if ((rand() % 4) == 0)
-	//				{
-	//					float damage = rand() % 11 + 1;
-	//					registry.emplace<Poison>(entity, damage);
-	//					//std::cout << "Poisoned entity " << (int)entity << std::endl;
-	//				}
-	//			});
-	//	}
+		//Spawn poison system
+		{
+			auto view = registry.view<Health>(entt::exclude<Poison>);
+			view.each([&](entt::entity entity, const Health& health)
+				{
+					if ((rand() % 4) == 0)
+					{
+						float damage = rand() % 11 + 1;
+						registry.emplace<Poison>(entity, damage);
+						//std::cout << "Poisoned entity " << (int)entity << std::endl;
+					}
+				});
+		}
 
-	//	iterations++;
-	//	std::cout << "Iteration " << iterations << ", entities alive: " << registry.alive() << std::endl;
-	//}
+		iterations++;
+		std::cout << "Iteration " << iterations << ", entities alive: " << registry.alive() << std::endl;
+	}*/
 
 	Scene scene;
-	scene.CreateSystem<PoisonSystem>(5);
-	scene.UpdateSystems(1);
+	Scene::lua_openscene(L, &scene);
 
+	scene.CreateSystem<CleanupSystem>();
+	scene.CreateSystem<PoisonSystem>(300);
+	scene.CreateSystem<InfoSystem>();
+	luaL_dofile(L, "sceneDemo.lua");
+
+	while (scene.GetEntityCount() != 0)
+	{
+		scene.UpdateSystems(1);
+	}
 	std::thread consoleThread(luaThreadLoop, L);
 
 	while (true)

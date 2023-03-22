@@ -163,11 +163,14 @@
     <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="monster.lua" />
+    <None Include="sceneDemo.lua" />
     <None Include="transform.lua" />
     <None Include="transformDemo.lua" />
     <None Include="vector.lua" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components.hpp" />
     <ClInclude Include="Scene.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
