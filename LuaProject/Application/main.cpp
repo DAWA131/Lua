@@ -109,7 +109,10 @@ int main()
 	entt::registry registry;
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
+	luaL_dofile(L, "setup.lua");
 	std::cout << "Hello from c++" << "\n";
+
+
 
 	/*
 	//POISON example
@@ -181,7 +184,7 @@ int main()
 	
 
 
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(800, 800), "SFML works!");
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
 
@@ -192,6 +195,21 @@ int main()
 		{
 			if (event.type == sf::Event::Closed)
 				window.close();
+
+			if (event.type == sf::Event::KeyPressed)
+			{
+				lua_pushinteger(L, event.key.code);
+				lua_setglobal(L, "key");
+				luaL_dofile(L, "keyInput.lua");
+			}
+			else if(event.type == sf::Event::KeyReleased)
+			{
+				//std::cout << "no key pressed\n";
+				lua_pushnil(L);
+				lua_setglobal(L, "key");
+				luaL_dofile(L, "keyInput.lua");
+			}
+			dumpError(L);
 		}
 
 		window.clear();
@@ -222,7 +240,6 @@ int main()
 
 	while (true)
 	{
-
 	}
 
 	return 0;

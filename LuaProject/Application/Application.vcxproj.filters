@@ -28,6 +28,8 @@
     <None Include="vector.lua" />
     <None Include="sceneDemo.lua" />
     <None Include="monster.lua" />
+    <None Include="keyInput.lua" />
+    <None Include="setup.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.hpp">

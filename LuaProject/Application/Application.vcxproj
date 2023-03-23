@@ -163,8 +163,10 @@
     <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="keyInput.lua" />
     <None Include="monster.lua" />
     <None Include="sceneDemo.lua" />
+    <None Include="setup.lua" />
     <None Include="transform.lua" />
     <None Include="transformDemo.lua" />
     <None Include="vector.lua" />

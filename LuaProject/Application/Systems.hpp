@@ -61,3 +61,17 @@ public:
 		return false;
 	}
 };
+
+class MovementSystem : public System
+{
+public:
+	bool OnUpdate(entt::registry& registry, float delta) final
+	{
+		auto view = registry.view<Moving>();
+		view.each([&](entt::entity entity, const Moving& movement)
+			{
+
+			}
+		);
+	}
+};
