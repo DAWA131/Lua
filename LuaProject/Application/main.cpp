@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "iostream"
 #include <iomanip>
 #include <thread>
@@ -8,6 +9,21 @@
 #include <stdlib.h>
 #include <time.h>
 #include "Scene.hpp"
+
+
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+
+
+//#ifdef _DEBUG
+//#pragma comment(lib, "sfml-window-d.lib")
+//#pragma comment(lib, "sfml-system-d.lib")
+//#pragma comment(lib, "sfml-graphics-d.lib")
+//#else
+//#pragma comment(lib, "sfml-window.lib")
+//#pragma comment(lib, "sfml-system.lib")
+//#pragma comment(lib, "sfml-graphics.lib")
+//#endif
 
 void dumpError(lua_State* L)
 {
@@ -163,6 +179,30 @@ int main()
 	//}
 	*/
 	
+
+
+	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+	sf::CircleShape shape(100.f);
+	shape.setFillColor(sf::Color::Green);
+
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+
+		window.clear();
+		window.draw(shape);
+		window.display();
+	}
+
+	return 0;
+
+
+
 
 	Scene scene;
 	Scene::lua_openscene(L, &scene);
