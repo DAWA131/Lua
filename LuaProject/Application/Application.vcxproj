@@ -163,13 +163,13 @@
     <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="keyInput.lua" />
+    <None Include="luaScripts\keyInput.lua" />
     <None Include="monster.lua" />
-    <None Include="sceneDemo.lua" />
-    <None Include="setup.lua" />
-    <None Include="transform.lua" />
-    <None Include="transformDemo.lua" />
-    <None Include="vector.lua" />
+    <None Include="luaScripts\sceneDemo.lua" />
+    <None Include="luaScripts\setup.lua" />
+    <None Include="luaScripts\transform.lua" />
+    <None Include="luaScripts\transformDemo.lua" />
+    <None Include="luaScripts\vector.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components.hpp" />

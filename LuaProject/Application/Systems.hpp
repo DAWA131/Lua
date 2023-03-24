@@ -74,7 +74,7 @@ public:
 		auto view = registry.view<Moving>();
 		view.each([&](entt::entity entity, const Moving& movement)
 			{
-
+				
 			}
 		);
 	}
