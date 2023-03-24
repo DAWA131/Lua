@@ -59,12 +59,16 @@ void Scene::RemoveEntity(int entity)
 
 void Scene::UpdateSystems(float delta)
 {
-	for (auto it = m_systems.begin(); it != m_systems.end(); it++)
+	for (auto it = m_systems.begin(); it != m_systems.end();)
 	{
 		if ((*it)->OnUpdate(m_registry, delta))
 		{
 			delete (*it);
 			it = m_systems.erase(it);
+		}
+		else
+		{
+			it++;
 		}
 	}
 }
