@@ -1,9 +1,13 @@
 #include "entt\entt.hpp"
 #include "lua.hpp"
 #include <iostream>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
 class System
 {
+protected:
+
 public:
 	virtual bool OnUpdate(entt::registry& registry, float delta) = 0;
 };
@@ -73,5 +77,26 @@ public:
 
 			}
 		);
+	}
+};
+
+class Draw : public System
+{
+private:
+	sf::RenderWindow* window;
+
+public:
+	Draw(sf::RenderWindow*& window) :window(window) {};
+	bool OnUpdate(entt::registry& registry, float delta) final
+	{
+		auto view = registry.view<Drawable>();
+		view.each([&](entt::entity entity, const Drawable& shape)
+			{
+				window->clear();
+				window->draw(shape.shape);
+				window->display();
+			}
+		);
+		return false;
 	}
 };

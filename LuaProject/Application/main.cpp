@@ -49,70 +49,54 @@ void luaThreadLoop(lua_State* L)
 	}
 }
 
+std::string GetValueString(lua_State* L, int i)
+{
+	switch (lua_type(L, i))
+	{
+	case LUA_TNIL: return "nil";
+	case LUA_TBOOLEAN:
+		return lua_toboolean(L, i) ? "true" : "false";
+	case LUA_TNUMBER: return std::to_string(lua_tonumber(L, i));
+	case LUA_TSTRING: return lua_tostring(L, i);
+	default: return "";
+	}
+}
+
 void dumpStack(lua_State* L)
 {
 	int size = lua_gettop(L);
-	std::cout << " " << std::string(11, '-');
-	std::cout << " STACK BEGIN ";
-	std::cout << " " << std::string(11, '-');
 
+	std::cout << "--- STACK BEGIN ---" << std::endl;
 	for (int i = size; i > 0; i--)
 	{
-		int type = lua_type(L, i);
-		std::string typeName = lua_typename(L, type);
-		std::string value;
-
-		if (type == LUA_TSTRING)
-		{
-			value = "\"";
-			value += lua_tostring(L, i);
-
-			if (value.size() > 11)
-			{
-				value.resize(9);
-				value += " . . ";
-			}
-
-			value += "\"";
-		}
-		else if (type == LUA_TBOOLEAN)
-		{
-			value = lua_toboolean(L, i) ? "true" : "false";
-		}
-		else if (type == LUA_TNIL)
-		{
-			value = "nil";
-		}
-		else if (lua_isnumber(L, i))
-		{
-			value = std::to_string(lua_tonumber(L, i));
-		}
-		else if (lua_isstring(L, i))
-		{
-			value = lua_tostring(L, i);
-		}
-
-		std::cout << std::setw(3) << i << " | ";
-		std::cout << typeName << std::setw(25 - typeName.size()) << value;
-		std::cout << std::setw(5 - typeName.size() - value.size()) << " | ";
-		std::cout << std::setw(2) << -(size - i + 1);
-		std::cout << std::endl;
+		std::cout << i
+			<< "\t"
+			<< lua_typename(L, lua_type(L, i))
+			<< "\t\t" << GetValueString(L, i)
+			<< std::endl;
 	}
-
-	std::cout << " " << std::string(12, '-');
-	std::cout << " STACK END ";
-	std::cout << std::string(12, '-') << std::endl;
+	std::cout << "---- STACK END ----" << std::endl;
 }
 
 int main()
 {
 	entt::registry registry;
 	lua_State* L = luaL_newstate();
+	std::thread consoleThread(luaThreadLoop, L);
 	luaL_openlibs(L);
-	luaL_dofile(L, "setup.lua");
 	std::cout << "Hello from c++" << "\n";
+	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(800, 800), "JumpKing ripoff");
 
+	Scene scene;
+	Scene::lua_openscene(L, &scene);
+	//scene.CreateSystem<CleanupSystem>();
+	//scene.CreateSystem<PoisonSystem>(100);
+	//scene.CreateSystem<InfoSystem>();
+	scene.CreateSystem<Draw>(window);
+	luaL_dofile(L, "sceneDemo.lua");
+	dumpError(L);
 
+	luaL_dofile(L, "setup.lua");
 
 	/*
 	//POISON example
@@ -184,17 +168,16 @@ int main()
 	
 
 
-	sf::RenderWindow window(sf::VideoMode(800, 800), "SFML works!");
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
 
-	while (window.isOpen())
+	while (window->isOpen())
 	{
 		sf::Event event;
-		while (window.pollEvent(event))
+		while (window->pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				window.close();
+				window->close();
 
 			if (event.type == sf::Event::KeyPressed)
 			{
@@ -204,31 +187,21 @@ int main()
 			}
 			else if(event.type == sf::Event::KeyReleased)
 			{
-				//std::cout << "no key pressed\n";
 				lua_pushnil(L);
 				lua_setglobal(L, "key");
 				luaL_dofile(L, "keyInput.lua");
 			}
 			dumpError(L);
 		}
-
-		window.clear();
-		window.draw(shape);
-		window.display();
+		scene.UpdateSystems(1);
 	}
 
+	delete window;
 	return 0;
 
 
 
 
-	Scene scene;
-	Scene::lua_openscene(L, &scene);
-	scene.CreateSystem<CleanupSystem>();
-	scene.CreateSystem<PoisonSystem>(100);
-	scene.CreateSystem<InfoSystem>();
-	luaL_dofile(L, "sceneDemo.lua");
-	dumpError(L);
 	for (int i = 0; i < 100; i++){}
 
 	while (scene.GetEntityCount() != 0)
@@ -236,7 +209,6 @@ int main()
 		scene.UpdateSystems(1);	
 	}
 
-	std::thread consoleThread(luaThreadLoop, L);
 
 	while (true)
 	{

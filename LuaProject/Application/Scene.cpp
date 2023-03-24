@@ -18,8 +18,15 @@ void Scene::lua_openscene(lua_State* L, Scene* scene)
 
 	luaL_Reg methods[] =
 	{
+		{"GetEntityCount", lua_GetEntityCount},
 		{"CreateEntity", lua_CreateEntity},
+		{"IsEntity", lua_IsEntity},
+		{"RemoveEntity", lua_RemoveEntity},
+		{"HasComponent", lua_HasComponent},
+		{"GetComponent", lua_GetComponent},
 		{"SetComponent", lua_SetComponent},
+		{"RemoveComponent", lua_RemoveComponent},
+
 
 		{NULL, NULL}
 	};
@@ -166,6 +173,14 @@ int Scene::lua_SetComponent(lua_State* L)
 	{
 		float tickDamage = lua_tonumber(L, 3);
 		scene->SetComponent<Poison>(entity, tickDamage);
+	}
+	else if (type == "player")
+	{
+		scene->SetComponent<Player>(entity);
+	}
+	else if (type == "drawable")
+	{
+		scene->SetComponent<Drawable>(entity);
 	}
 	return 0;
 }

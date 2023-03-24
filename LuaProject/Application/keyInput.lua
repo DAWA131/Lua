@@ -8,8 +8,8 @@ if key == D then
 	print("D")
 end
 if key == SPACE then
-	--print("space")
-	force = force + 0.5;
+	force = force + 2;
+	if force >= 50 then force = 50 end
 end
 if key == nil and force ~= 0 then
 	print(force)

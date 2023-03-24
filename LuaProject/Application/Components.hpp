@@ -16,11 +16,16 @@ struct Moving
 	float x;
 };
 
-struct drawable
+struct Player
+{
+	bool NonVoidStruct;
+};
+
+struct Drawable
 {
 	sf::CircleShape shape;
 
-	drawable() : shape(100.f)
+	Drawable() : shape(100.f)
 	{
 		shape.setFillColor(sf::Color::Green);
 	}
