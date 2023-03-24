@@ -93,10 +93,8 @@ int main()
 	//scene.CreateSystem<PoisonSystem>(100);
 	//scene.CreateSystem<InfoSystem>();
 	scene.CreateSystem<Draw>(window);
-	luaL_dofile(L, "sceneDemo.lua");
-	dumpError(L);
 
-	luaL_dofile(L, "setup.lua");
+	luaL_dofile(L, "luaScripts/setup.lua");
 
 	/*
 	//POISON example
@@ -183,13 +181,13 @@ int main()
 			{
 				lua_pushinteger(L, event.key.code);
 				lua_setglobal(L, "key");
-				luaL_dofile(L, "keyInput.lua");
+				luaL_dofile(L, "luaScripts/keyInput.lua");
 			}
 			else if(event.type == sf::Event::KeyReleased)
 			{
 				lua_pushnil(L);
 				lua_setglobal(L, "key");
-				luaL_dofile(L, "keyInput.lua");
+				luaL_dofile(L, "luaScripts/keyInput.lua");
 			}
 			dumpError(L);
 		}
