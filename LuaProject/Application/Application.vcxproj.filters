@@ -21,16 +21,35 @@
     <ClCompile Include="lua\M2main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="lua\M1\entity.lua" />
-    <None Include="lua\M1\ex_7.lua" />
-    <None Include="lua\fizz.lua" />
-    <None Include="lua\fail.lua" />
-    <None Include="lua\Dino.lua" />
-    <None Include="lua\vector.lua" />
-    <None Include="lua\vectorDemo.lua" />
-    <None Include="lua\transform.lua" />
-    <None Include="lua\transformDemo.lua" />
+    <None Include="script.lua">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="gamble.lua">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="gameStats.lua">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="entity.lua">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="test.lua" />
+    <None Include="Fizzbuzz.lua" />
+    <None Include="populate.lua" />
+    <None Include="vector.lua" />
+    <None Include="vector-demo.lua" />
+    <None Include="transform.lua" />
+    <None Include="sceneDemo.lua" />
+    <None Include="monster.lua" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Scene.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

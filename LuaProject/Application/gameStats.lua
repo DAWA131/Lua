@@ -1,4 +1,4 @@
-local stats = 
+local stats =
 {
 	strength = 4,
 	perception = 7,
@@ -15,14 +15,13 @@ function printStats()
 	end
 end
 
-function printStat(a)
-	io.write(a .. " = " .. stats[a] .. "\n")
+function printStat(stat)
+	print(stats[stat])
 end
 
-function safePrintStat(a)
-	if pcall(printStat, a) then
-
-	else
-		print("No stat called " .. a)
+function safeGetStat(stat)
+	succeeded, error = pcall(printStat, stat)
+	if not succeeded then
+		print("Error: " .. error .. "\n")
 	end
 end

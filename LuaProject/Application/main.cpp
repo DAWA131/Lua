@@ -1,12 +1,11 @@
-#include "iostream"
+#include <iostream>
 #include <thread>
-#include "entt\entt.hpp"
-#include <Windows.h>
 #include <string>
-#include "lua.hpp"
 #include <iomanip>
 #include <cassert>
+#include "Scene.hpp"
 //#include "lua/M2main.cpp"
+#include <Windows.h>
 
 void dumpError(lua_State* L)
 {
@@ -40,306 +39,316 @@ void doLuaFile(lua_State* L, const std::string& file)
 	}
 }
 
+std::string GetValueString(lua_State* L, int i)
+{
+	switch (lua_type(L, i))
+	{
+	case LUA_TNIL: return "nil";
+	case LUA_TBOOLEAN:
+		return lua_toboolean(L, i) ? "true" : "false";
+	case LUA_TNUMBER: return std::to_string(lua_tonumber(L, i));
+	case LUA_TSTRING: return lua_tostring(L, i);
+	default: return "";
+	}
+}
+
 void DumpStack(lua_State* L)
 {
 	int size = lua_gettop(L);
 
-	std::cout << " " << std::string(11, ' - ');
-	std::cout << " STACK BEGIN ";
-	std::cout << std::string(11, ' - ') << std::endl;
-
+	std::cout << "--- STACK BEGIN ---" << std::endl;
 	for (int i = size; i > 0; i--)
 	{
-		int type = lua_type(L, i);
-		std::string typeName = lua_typename(L, type);
-		std::string value;
-
-		if (type == LUA_TSTRING)
-		{
-			value = "\"";
-			value += lua_tostring(L, i);
-
-			if (value.size() > 11)
-			{
-				value.resize(9);
-				value += "..";
-			}
-
-			value += "\"";
-		}
-		else if (type == LUA_TBOOLEAN)
-		{
-			value = lua_toboolean(L, i) ? "true" : "false";
-		}
-		else if (type == LUA_TNIL)
-		{
-			value = "nil";
-		}
-		else if (lua_isnumber(L, i))
-		{
-			value = std::to_string(lua_tonumber(L, i));
-		}
-		else if (lua_isstring(L, i))
-		{
-			value = lua_tostring(L, i);
-		}
-
-		std::cout << std::setw(3) << i << " | ";
-		std::cout << typeName << std::setw(25 - typeName.size()) << value;
-		std::cout << std::setw(5 - typeName.size() - value.size()) << " | ";
-		std::cout << std::setw(2) << -(size - i + 1);
-		std::cout << std::endl;
+		std::cout << i
+			<< "\t"
+			<< lua_typename(L, lua_type(L, i))
+			<< "\t\t" << GetValueString(L, i)
+			<< std::endl;
 	}
-
-	std::cout << " " << std::string(12, ' - ');
-	std::cout << " STACK END ";
-	std::cout << std::string(12, ' - ') << std::endl;
+	std::cout << "---- STACK END ----" << std::endl;
 }
 
-struct vector3
+struct Vector3
 {
 	float X, Y, Z;
-	vector3(float x = 0.f, float y = 0.f, float z = 0.f)
-		:X(x), Y(y), Z(z) {}
+	Vector3(float x = 0.f, float y = 0.f, float z = 0.f) :
+		X(x), Y(y), Z(z) {}
 };
 
-struct transform
+Vector3 lua_tovector(lua_State* L, int index)
 {
-	vector3 p, r, s;
-	transform(vector3 p, vector3 r, vector3 s)
-		:p(p), r(r), s(s) {}
-	transform()
-		:p(vector3()), r(vector3()), s(vector3()) {}
-};
-
-vector3 lua_tovector(lua_State* L, int i)
-{
-	if (!lua_istable(L, i))
+	if (!lua_istable(L, index))
 	{
-		assert("Inxex isnt table!");
+		throw "lua_tovector: table expected";
 	}
-	vector3 ret;
 
-	lua_getfield(L, i, "X");
-	ret.X = lua_tonumber(L, -1);
+	Vector3 vector;
+
+	lua_getfield(L, index, "x");
+	vector.X = lua_tonumber(L, -1);
 	lua_pop(L, 1);
 
-	lua_getfield(L, i, "Y");
-	ret.Y = lua_tonumber(L, -1);
+	lua_getfield(L, index, "y");
+	vector.Y = lua_tonumber(L, -1);
 	lua_pop(L, 1);
 
-	lua_getfield(L, i, "Z");
-	ret.Z = lua_tonumber(L, -1);
+	lua_getfield(L, index, "z");
+	vector.Z = lua_tonumber(L, -1);
 	lua_pop(L, 1);
 
-	return ret;
-}
-
-transform lua_totransform(lua_State* L, int i)
-{
-	if (!lua_istable(L, i))
-	{
-		assert("Inxex isnt table!");
-	}
-	transform ret;
-	vector3 temp;
-
-	lua_getfield(L, i, "position");
-	ret.p = lua_tovector(L, -1);
-	lua_pop(L, 1);
-
-	lua_getfield(L, i, "rotation");
-	ret.r = lua_tovector(L, -1);
-	lua_pop(L, 1);
-
-	lua_getfield(L, i, "scale");
-	ret.s = lua_tovector(L, -1);
-	lua_pop(L, 1);
-
-	return ret;
+	return vector;
 }
 
 static int PrintVector(lua_State* L)
 {
-	vector3 vector = lua_tovector(L, 1);
+	Vector3 vector = lua_tovector(L, 1); //Own function
 
-	std::cout << "[C++] Vector(" << vector.X << ", " << vector.Y << ", " << vector.Z << ")\n";
-
-	return 0;
-}
-
-static int PrintTransform(lua_State* L)
-{
-	transform worldMatrix = lua_totransform(L, 1);
-
-	std::cout << "[C++] Matrix:\n" <<
-		"Pos(" << worldMatrix.p.X << ", " << worldMatrix.p.Y << ", " << worldMatrix.p.Z << ")\n" <<
-		"rot(" << worldMatrix.r.X << ", " << worldMatrix.r.Y << ", " << worldMatrix.r.Z << ")\n" <<
-		"scale(" << worldMatrix.s.X << ", " << worldMatrix.s.Y << ", " << worldMatrix.s.Z << ")\n";
+	std::cout << "[C++] Vector("
+		<< vector.X << ", "
+		<< vector.Y << ", "
+		<< vector.Z << ")"
+		<< std::endl;
 
 	return 0;
 }
 
-void lua_pushvector(lua_State* L, const vector3& vec)
+void lua_pushvector(lua_State* L, const Vector3& vector)
 {
 	lua_newtable(L);
 
-	lua_pushnumber(L, vec.X);
-	lua_setfield(L, -2, "X");
+	lua_pushnumber(L, vector.X);
+	lua_setfield(L, -2, "x");
 
-	lua_pushnumber(L, vec.Y);
-	lua_setfield(L, -2, "Y");
+	lua_pushnumber(L, vector.Y);
+	lua_setfield(L, -2, "y");
 
-	lua_pushnumber(L, vec.Z);
-	lua_setfield(L, -2, "Z");
-}
-
-void lua_pushtransform(lua_State* L, const transform& matrix)
-{
-	lua_newtable(L);
-
-	lua_pushvector(L, matrix.p);
-	lua_setfield(L, -2, "position");
-
-	lua_pushvector(L, matrix.r);
-	lua_setfield(L, -2, "rotation");
-
-	lua_pushvector(L, matrix.s);
-	lua_setfield(L, -2, "scale");
+	lua_pushnumber(L, vector.Z);
+	lua_setfield(L, -2, "z");
 }
 
 static int RandomVector(lua_State* L)
 {
 	if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2))
 	{
-		assert("Invalid input");
 		return 0;
 	}
 
 	int min = lua_tonumber(L, 1);
 	int max = lua_tonumber(L, 2);
+
 	int diff = max - min;
 	lua_pop(L, 2);
 
-	vector3 vec((rand() % diff + min), (rand() % diff + min), (rand() % diff + min));
-	lua_pushvector(L, vec);
+	Vector3 vector(rand() % diff + min, rand() % diff + min, rand() % diff + min);
+	lua_pushvector(L, vector);
+	
 	return 1;
 }
 
-static int RandomTransformation(lua_State* L)
+struct Transform
+{
+	Vector3 Position, Rotation, Scale;
+	Transform(Vector3 position = Vector3(), Vector3 rotation = Vector3(), Vector3 scale = Vector3()) :
+		Position(position), Rotation(rotation), Scale(scale) {}
+};
+
+Transform lua_totransform(lua_State* L, int index)
+{
+	if (!lua_istable(L, index))
+	{
+		throw "lua_totransform: table expected";
+	}
+
+	Transform transform;
+
+	lua_getfield(L, index, "position");
+	transform.Position = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+
+	lua_getfield(L, index, "rotation");
+	transform.Rotation = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+
+	lua_getfield(L, index, "scale");
+	transform.Scale = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+
+	return transform;
+}
+
+void lua_pushtransform(lua_State* L, const Transform& transform)
 {
 	lua_newtable(L);
 
-	lua_pushnumber(L, 1);
-	lua_pushnumber(L, 2);
+	lua_pushvector(L, transform.Position);
+	lua_setfield(L, -2, "position");
+
+	lua_pushvector(L, transform.Rotation);
+	lua_setfield(L, -2, "rotation");
+
+	lua_pushvector(L, transform.Scale);
+	lua_setfield(L, -2, "scale");
+}
+
+static int PrintTransform(lua_State* L)
+{
+	Transform transform = lua_totransform(L, 1); //Own function
+
+	std::cout << "[C++] Transform:" << std::endl;
+
+	std::cout << "Position("
+		<< transform.Position.X << ", "
+		<< transform.Position.Y << ", "
+		<< transform.Position.Z << ")"
+		<< std::endl;
+
+	std::cout << "Rotation("
+		<< transform.Rotation.X << ", "
+		<< transform.Rotation.Y << ", "
+		<< transform.Rotation.Z << ")"
+		<< std::endl;
+
+	std::cout << "Scale("
+		<< transform.Scale.X << ", "
+		<< transform.Scale.Y << ", "
+		<< transform.Scale.Z << ")"
+		<< std::endl;
+
+	return 0;
+}
+
+static int RandomTransform(lua_State* L)
+{
+	lua_newtable(L);
+
+	lua_pushvalue(L, 1);
+	lua_pushvalue(L, 2);
 	RandomVector(L);
 	lua_setfield(L, -2, "position");
 
-	lua_pushnumber(L, 1);
-	lua_pushnumber(L, 2);
+	lua_pushvalue(L, 1);
+	lua_pushvalue(L, 2);
 	RandomVector(L);
 	lua_setfield(L, -2, "rotation");
 
-	lua_pushnumber(L, 1);
-	lua_pushnumber(L, 2);
+	lua_pushvalue(L, 1);
+	lua_pushvalue(L, 2);
 	RandomVector(L);
 	lua_setfield(L, -2, "scale");
+
 	return 1;
 }
 
-struct Health
-{
-	float value;
-};
-
-struct Poison
-{
-	float tickDmg;
-};
-
 int main()
 {
-
-	entt::registry reg;
+	entt::registry registry;
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 	std::cout << "Hello from c++" << "\n";
 
-	std::thread consoleThread(luaThreadLoop, L);
+	//DINO
+	/*luaL_dofile(L, "populate.lua");
+	lua_getglobal(L, "dino");
+	lua_getfield(L, -1, "species");
+	std::cout << "Species: " << lua_tostring(L, -1) << std::endl;
+	lua_pop(L, 1);
+	lua_getfield(L, -1, "name");
+	std::cout << "Name: " << lua_tostring(L, -1) << std::endl;
+	lua_pop(L, 1);
+	lua_getfield(L, -1, "wings");
+	std::cout << "Wings: " << (lua_toboolean(L, -1) ? "true" : "false") << std::endl;
+	lua_pop(L, 1);
+	lua_getfield(L, -1, "getnoise");
+	lua_pushnumber(L, 7);
+	lua_pcall(L, 1, 1, 0);
+	std::cout << "Noise: " << lua_tostring(L, -1) << std::endl;
+	lua_pop(L, 1);*/
 
-	//doLuaFile(L, "lua/vector.lua");
-
-	//lua_pushcfunction(L, PrintVector);
-	//lua_setglobal(L, "PrintVector");
-
-	//lua_pushcfunction(L, PrintTransform);
-	//lua_setglobal(L, "PrintTransform");
-
-	//lua_pushcfunction(L, RandomVector);
-	//lua_setglobal(L, "RandomVector");
-
-	//lua_pushcfunction(L, RandomTransformation);
-	//lua_setglobal(L, "RandomTransformation");
-
-	//doLuaFile(L, "lua/transformDemo.lua");
 
 	srand(time(NULL));
+	/*for (int i = 0; i < 100; i++)
+	{
+		auto entity = registry.create();
+		registry.emplace<Health>(entity, 100.f);
+		float tickDamage = rand() % 10 + 1;
+		registry.emplace<Poison>(entity, tickDamage);
+	}*/
+
+	//int iterations = 0;
+	//while (registry.alive())
+	//{
+	//	//PoisonSystem
+	//	{
+	//		auto view = registry.view<Health, Poison>();
+	//		view.each([](Health& health, const Poison& poison)
+	//			{
+	//				health.Value -= poison.TickDamage;
+	//			});
+	//	}
+
+	//	//CleanupSystem
+	//	{
+	//		auto view = registry.view<Health>();
+	//		view.each([&](entt::entity entity, const Health& health)
+	//			{
+	//				if (health.Value <= 0.f)
+	//				{
+	//					registry.destroy(entity);
+	//				}
+	//			});
+	//	}
+
+	//	//CureSystem
+	//	{
+	//		if ((rand() % 20) == 0)
+	//		{
+	//			auto view = registry.view<Poison>();
+	//			view.each([&](entt::entity entity, const Poison& poison)
+	//				{
+	//					registry.remove<Poison>(entity);
+	//				});
+	//			std::cout << "Cured all entities!" << std::endl;
+	//		}
+	//	}
+
+	//	//SpawnpoisonSystem
+	//	{
+	//		auto view = registry.view<Health>(entt::exclude<Poison>);
+	//		view.each([&](entt::entity entity, const Health& health)
+	//			{
+	//				if ((rand() % 4) == 0)
+	//				{
+	//					float damage = rand() % 10 + 1;
+	//					registry.emplace<Poison>(entity, damage);
+	//					std::cout << "Poisoned entity " << (int)entity << std::endl;
+	//				}
+	//			});
+	//	}
+
+	//	iterations++;
+	//	std::cout << "Iteration " << iterations << ", entities alive: " << registry.alive() << std::endl;
+	//}
+
+
+	Scene scene(L);
+	Scene::lua_openscene(L, &scene);
+
+	scene.CreateSystem<PoisonSystem>(100);
+	scene.CreateSystem<CleanupSystem>();
+	scene.CreateSystem<InfoSystem>();
+	luaL_dofile(L, "sceneDemo.lua");
 
 	for (int i = 0; i < 100; i++)
 	{
-		auto entity = reg.create();
-
-		reg.emplace<Health>(entity, 100.f);
-
-		float tickdmg = rand() % 10 + 1;
-		reg.emplace<Poison>(entity, tickdmg);
+		scene.UpdateSystems(1); //Change to delta
 	}
 
-	int iterations = 0;
-	bool cured = false;
-	while (reg.alive() && !cured)
-	{
-		if (rand()%20 == 0)
-		{
-			auto view = reg.view<Poison>();
-			view.each([&](entt::entity entity, const Poison& posison)
-				{
-					reg.remove<Poison>(entity);
-				});
-			std::cout << "all entities cured!\n";
-			bool cured = true;
-		}
 
-		if (rand()%5 == 0)
-		{
-			auto view = reg.view<Health>(entt::exclude<Poison>);
-			view.each([&](entt::entity entity, const Health& health)
-				{
-					float tickDmg = rand() % 10 + 1;
-					reg.emplace<Poison>(entity, tickDmg);
-					std::cout << "Entity: " << (int)entity << " has been poisoned\n";
-				});
-		}
-
-		{
-			auto view = reg.view<Health, Poison>();
-
-			view.each([](Health& health, const Poison& poison) { health.value -= poison.tickDmg; });
-		}
-		auto view = reg.view<Health>();
-		view.each([&](entt::entity entity, const Health& health) {if (health.value <= 0.f) reg.destroy(entity); });
-
-		iterations++;
-		std::cout << "Iteration " << iterations
-			 << ", entities alive: " << reg.alive()
-			 << std::endl;
-	}
-
-	int bp = 2;
+	std::thread consoleThread(luaThreadLoop, L);
+	
 	while (true)
 	{
-		//return 0;;
-		//run game here
+
 	}
 	return 0;
 }
