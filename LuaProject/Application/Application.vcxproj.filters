@@ -44,4 +44,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="luaScripts\keyInput.lua" />
+    <None Include="luaScripts\sceneDemo.lua" />
+    <None Include="luaScripts\setup.lua" />
+  </ItemGroup>
 </Project>
