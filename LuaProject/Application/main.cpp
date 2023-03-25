@@ -10,7 +10,6 @@
 #include <time.h>
 #include "Scene.hpp"
 
-
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -89,17 +88,14 @@ int main()
 
 	Scene scene;
 	Scene::lua_openscene(L, &scene);
-	//sf::CircleShape shape(100.f);
-	//shape.setFillColor(sf::Color::Green);
 	//scene.CreateSystem<CleanupSystem>();
 	//scene.CreateSystem<PoisonSystem>(100);
 	//scene.CreateSystem<InfoSystem>();
-	scene.CreateSystem<MovementSystem>();
-	scene.CreateSystem<JumpSystem>();
-	scene.CreateSystem<CollisionSystem>();
 	scene.CreateSystem<Draw>(window);
 
 	luaL_dofile(L, "luaScripts/setup.lua");
+	luaL_dofile(L, "luaScripts/fileReader.lua");
+	luaL_dofile(L, "luaScripts/maploader.lua");
 
 	/*
 	//POISON example
@@ -170,12 +166,12 @@ int main()
 	*/
 	
 
+
+	sf::CircleShape shape(100.f);
+	shape.setFillColor(sf::Color::Green);
+
 	while (window->isOpen())
 	{
-		if (window->getSize().x != 800 || window->getSize().y != 800) {
-			window->setSize(sf::Vector2u(800, 800));
-		}
-
 		sf::Event event;
 		while (window->pollEvent(event))
 		{
@@ -186,16 +182,13 @@ int main()
 			{
 				lua_pushinteger(L, event.key.code);
 				lua_setglobal(L, "key");
-				lua_pushboolean(L, true);
-				lua_setglobal(L, "moving");
 				luaL_dofile(L, "luaScripts/keyInput.lua");
+				dumpStack(L);
 			}
 			else if(event.type == sf::Event::KeyReleased)
 			{
-				lua_pushinteger(L, event.key.code);
+				lua_pushnil(L);
 				lua_setglobal(L, "key");
-				lua_pushboolean(L, false);
-				lua_setglobal(L, "moving");
 				luaL_dofile(L, "luaScripts/keyInput.lua");
 			}
 			dumpError(L);
@@ -205,8 +198,6 @@ int main()
 
 	delete window;
 	return 0;
-
-
 
 
 	for (int i = 0; i < 100; i++){}

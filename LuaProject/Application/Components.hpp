@@ -13,12 +13,7 @@ struct Poison
 
 struct Moving
 {
-	float Xspeed;
-};
-
-struct Jumping
-{
-	float ySpeed;
+	float x;
 };
 
 struct Player
@@ -26,13 +21,21 @@ struct Player
 	bool NonVoidStruct;
 };
 
+struct Position
+{
+	float xPos;
+	float yPos;
+};
+
 struct Drawable
 {
-	sf::CircleShape shape;
+	sf::Sprite sprite;
+	sf::Texture tex;
 
-	Drawable() : shape(5.f)
+	Drawable(std::string texName, float x = 0, float y = 0)
 	{
-		shape.setFillColor(sf::Color::Green);
-		shape.setPosition(400, 750);
+		tex.loadFromFile(texName);
+		sprite.setTexture(tex);
+		sprite.setPosition(x, y);
 	}
 };

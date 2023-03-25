@@ -23,6 +23,17 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="luaScripts\transform.lua" />
+    <None Include="luaScripts\transformDemo.lua" />
+    <None Include="luaScripts\vector.lua" />
+    <None Include="luaScripts\sceneDemo.lua" />
+    <None Include="monster.lua" />
+    <None Include="luaScripts\keyInput.lua" />
+    <None Include="luaScripts\setup.lua" />
+    <None Include="luaScripts\fileReader.lua" />
+    <None Include="luaScripts\maploader.lua" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="Scene.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -32,10 +43,5 @@
     <ClInclude Include="Systems.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="luaScripts\keyInput.lua" />
-    <None Include="luaScripts\sceneDemo.lua" />
-    <None Include="luaScripts\setup.lua" />
   </ItemGroup>
 </Project>
