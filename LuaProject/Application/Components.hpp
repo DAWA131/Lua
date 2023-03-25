@@ -21,12 +21,21 @@ struct Player
 	bool NonVoidStruct;
 };
 
+struct Position
+{
+	float xPos;
+	float yPos;
+};
+
 struct Drawable
 {
-	sf::CircleShape shape;
+	sf::Sprite sprite;
+	sf::Texture tex;
 
-	Drawable() : shape(100.f)
+	Drawable(std::string texName, float x = 0, float y = 0)
 	{
-		shape.setFillColor(sf::Color::Green);
+		tex.loadFromFile(texName);
+		sprite.setTexture(tex);
+		sprite.setPosition(x, y);
 	}
 };

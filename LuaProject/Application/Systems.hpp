@@ -84,19 +84,18 @@ class Draw : public System
 {
 private:
 	sf::RenderWindow* window;
-
 public:
 	Draw(sf::RenderWindow*& window) :window(window) {};
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
+		window->clear();
 		auto view = registry.view<Drawable>();
 		view.each([&](entt::entity entity, const Drawable& shape)
 			{
-				window->clear();
-				window->draw(shape.shape);
-				window->display();
+				window->draw(shape.sprite);
 			}
 		);
+		window->display();
 		return false;
 	}
 };

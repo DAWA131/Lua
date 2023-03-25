@@ -30,6 +30,8 @@
     <None Include="monster.lua" />
     <None Include="luaScripts\keyInput.lua" />
     <None Include="luaScripts\setup.lua" />
+    <None Include="luaScripts\fileReader.lua" />
+    <None Include="luaScripts\maploader.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.hpp">

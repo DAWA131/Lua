@@ -163,7 +163,9 @@
     <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="luaScripts\fileReader.lua" />
     <None Include="luaScripts\keyInput.lua" />
+    <None Include="luaScripts\maploader.lua" />
     <None Include="monster.lua" />
     <None Include="luaScripts\sceneDemo.lua" />
     <None Include="luaScripts\setup.lua" />

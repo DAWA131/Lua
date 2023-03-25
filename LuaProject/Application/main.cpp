@@ -10,7 +10,6 @@
 #include <time.h>
 #include "Scene.hpp"
 
-
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -95,6 +94,8 @@ int main()
 	scene.CreateSystem<Draw>(window);
 
 	luaL_dofile(L, "luaScripts/setup.lua");
+	luaL_dofile(L, "luaScripts/fileReader.lua");
+	luaL_dofile(L, "luaScripts/maploader.lua");
 
 	/*
 	//POISON example
@@ -182,6 +183,7 @@ int main()
 				lua_pushinteger(L, event.key.code);
 				lua_setglobal(L, "key");
 				luaL_dofile(L, "luaScripts/keyInput.lua");
+				dumpStack(L);
 			}
 			else if(event.type == sf::Event::KeyReleased)
 			{
@@ -196,8 +198,6 @@ int main()
 
 	delete window;
 	return 0;
-
-
 
 
 	for (int i = 0; i < 100; i++){}

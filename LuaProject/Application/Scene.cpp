@@ -184,7 +184,15 @@ int Scene::lua_SetComponent(lua_State* L)
 	}
 	else if (type == "drawable")
 	{
-		scene->SetComponent<Drawable>(entity);
+		std::string texName = lua_tostring(L, 3);
+		float x = 0;
+		float y = 0;
+		if(lua_gettop(L) >= 5)
+		{
+			x = lua_tonumber(L, 4);
+			y = lua_tonumber(L, 5);
+		}
+		scene->SetComponent<Drawable>(entity, texName, x, y);
 	}
 	return 0;
 }
