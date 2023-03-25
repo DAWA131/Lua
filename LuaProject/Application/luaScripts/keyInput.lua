@@ -8,7 +8,7 @@ if key == SPACE then
 	if force >= 8 then
 		force = 8
 	end
-	--scene.SetComponent(entity, "jump", 0)
+	scene.SetComponent(entity, "jump", 0)
 end
 
 --- Moving
