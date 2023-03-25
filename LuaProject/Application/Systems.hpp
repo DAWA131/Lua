@@ -3,7 +3,6 @@
 #include <iostream>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
 class System
 {
@@ -72,59 +71,12 @@ class MovementSystem : public System
 public:
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
-		auto view = registry.view<Drawable, Moving>(entt::exclude<Jumping>);
-		view.each([](Drawable& shape, const Moving& moving)
+		auto view = registry.view<Moving>();
+		view.each([&](entt::entity entity, const Moving& movement)
 			{
-				shape.shape.move(moving.Xspeed, 0.f);
+				
 			}
 		);
-		return false;
-	}
-};
-
-class JumpSystem : public System
-{
-public:
-	bool OnUpdate(entt::registry& registry, float delta) final
-	{
-		auto view = registry.view<Drawable, Jumping>();
-		view.each([](Drawable& shape, Jumping& jump)
-			{
-				shape.shape.move(0.f, jump.ySpeed);
-				jump.ySpeed = jump.ySpeed + 0.05;
-			}
-		);
-		return false;
-	}
-};
-
-class CollisionSystem : public System
-{
-public:
-	bool OnUpdate(entt::registry& registry, float delta) final
-	{
-		auto view = registry.view<Drawable>();
-		view.each([](Drawable& shape)
-			{
-				if (shape.shape.getPosition().x < 0)
-					shape.shape.setPosition(0.f, shape.shape.getPosition().y);
-				else if (shape.shape.getPosition().x > 790)
-					shape.shape.setPosition(790, shape.shape.getPosition().y);
-
-				if (shape.shape.getPosition().y > 750)
-					shape.shape.setPosition(shape.shape.getPosition().x, 750);
-			}
-		);
-
-		auto view2 = registry.view<Drawable, Jumping>();
-		view2.each([&](entt::entity entity, const Drawable& shape, const Jumping& jumping)
-			{
-				if (shape.shape.getPosition().y > 740)
-					registry.remove<Jumping>(entity);
-			}
-		);
-
-		return false;
 	}
 };
 

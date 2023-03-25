@@ -1,30 +1,18 @@
 --print("Lua: ")
 --print(key)
-local speed = 1.5
 
--- Jumping
+if key == A then
+	print("A")
+end
+if key == D then
+	print("D")
+end
 if key == SPACE then
 	force = force + 2;
-	if force >= 8 then
-		force = 8
-	end
-	--scene.SetComponent(entity, "jump", 0)
+	if force >= 50 then force = 50 end
 end
-
---- Moving
-if key == D then
-	scene.SetComponent(entity, "rightMove", speed)
+if key == nil and force ~= 0 then
+	print(force)
+	force = 0
 end
-if key == A then
-	scene.SetComponent(entity, "leftMove", speed)
-end
-
----- Released key
-if moving == false then
-	if key == SPACE	then
-		scene.SetComponent(entity, "jump", force)
-		force = 0
-	else
-		scene.RemoveComponent(entity, "move")
-	end
-end
+--some logic for key inputs

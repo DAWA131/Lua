@@ -178,11 +178,6 @@
     <ClInclude Include="Scene.hpp" />
     <ClInclude Include="Systems.hpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="luaScripts\keyInput.lua" />
-    <None Include="luaScripts\sceneDemo.lua" />
-    <None Include="luaScripts\setup.lua" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
