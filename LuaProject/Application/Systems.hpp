@@ -71,12 +71,59 @@ class MovementSystem : public System
 public:
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
-		auto view = registry.view<Moving>();
-		view.each([&](entt::entity entity, const Moving& movement)
+		auto view = registry.view<Player, Drawable, Moving>(entt::exclude<Jumping>);
+		view.each([](Player& player, Drawable& shape, const Moving& moving)
 			{
-				
+				shape.sprite.move(moving.Xspeed, 0.f);
 			}
 		);
+		return false;
+	}
+};
+
+class JumpSystem : public System
+{
+public:
+	bool OnUpdate(entt::registry& registry, float delta) final
+	{
+		auto view = registry.view<Drawable, Jumping>();
+		view.each([](Drawable& shape, Jumping& jump)
+			{
+				shape.sprite.move(0.f, jump.ySpeed);
+				jump.ySpeed = jump.ySpeed + 0.05;
+			}
+		);
+		return false;
+	}
+};
+
+class CollisionSystem : public System
+{
+public:
+	bool OnUpdate(entt::registry& registry, float delta) final
+	{
+		auto view = registry.view<Drawable>();
+		view.each([](Drawable& shape)
+			{
+				if (shape.sprite.getPosition().x < 0)
+				shape.sprite.setPosition(0.f, shape.sprite.getPosition().y);
+				else if (shape.sprite.getPosition().x > 790)
+					shape.sprite.setPosition(790, shape.sprite.getPosition().y);
+
+		if (shape.sprite.getPosition().y > 750)
+			shape.sprite.setPosition(shape.sprite.getPosition().x, 750);
+			}
+		);
+
+		auto view2 = registry.view<Drawable, Jumping>();
+		view2.each([&](entt::entity entity, const Drawable& shape, const Jumping& jumping)
+			{
+				if (shape.sprite.getPosition().y > 740)
+				registry.remove<Jumping>(entity);
+			}
+		);
+
+		return false;
 	}
 };
 

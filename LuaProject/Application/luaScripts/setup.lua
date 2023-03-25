@@ -14,4 +14,4 @@ scene.SetComponent(entity, "drawable", "OverWorld/1.png");
 
 entity = scene.CreateEntity()
 scene.SetComponent(entity, "player", true);
-scene.SetComponent(entity, "drawable", "OverWorld/7.png", 20, 20);
+scene.SetComponent(entity, "drawable", "OverWorld/7.png", 400, 750);

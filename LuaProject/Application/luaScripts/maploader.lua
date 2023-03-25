@@ -26,7 +26,7 @@ while line ~= nil do
             if sub ~= "0" then
                 print("elemnt found name: " .. sub .. "with pos Y: " .. currentX .. "and Y: " .. currentY)
                 entity = scene.CreateEntity()
-                scene.SetComponent(entity, "player", true);
+               -- scene.SetComponent(entity, "player", true);
                 scene.SetComponent(entity, "drawable", "Overworld/" .. sub .. ".png" , currentX, currentY);
             end
             pos = spacePos + 1

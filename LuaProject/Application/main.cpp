@@ -91,6 +91,9 @@ int main()
 	//scene.CreateSystem<CleanupSystem>();
 	//scene.CreateSystem<PoisonSystem>(100);
 	//scene.CreateSystem<InfoSystem>();
+	scene.CreateSystem<MovementSystem>();
+	scene.CreateSystem<JumpSystem>();
+	scene.CreateSystem<CollisionSystem>();
 	scene.CreateSystem<Draw>(window);
 
 	luaL_dofile(L, "luaScripts/setup.lua");
@@ -167,8 +170,8 @@ int main()
 	
 
 
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	//sf::CircleShape shape(100.f);
+	//shape.setFillColor(sf::Color::Green);
 
 	while (window->isOpen())
 	{
@@ -182,6 +185,8 @@ int main()
 			{
 				lua_pushinteger(L, event.key.code);
 				lua_setglobal(L, "key");
+				lua_pushboolean(L, true);
+				lua_setglobal(L, "moving");
 				luaL_dofile(L, "luaScripts/keyInput.lua");
 				dumpStack(L);
 			}
@@ -189,6 +194,8 @@ int main()
 			{
 				lua_pushnil(L);
 				lua_setglobal(L, "key");
+				lua_pushboolean(L, false);
+				lua_setglobal(L, "moving");
 				luaL_dofile(L, "luaScripts/keyInput.lua");
 			}
 			dumpError(L);

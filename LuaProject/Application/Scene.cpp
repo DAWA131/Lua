@@ -194,6 +194,21 @@ int Scene::lua_SetComponent(lua_State* L)
 		}
 		scene->SetComponent<Drawable>(entity, texName, x, y);
 	}
+	else if (type == "rightMove")
+	{
+		float moveSpeed = lua_tonumber(L, 3);
+		scene->SetComponent<Moving>(entity, moveSpeed);
+	}
+	else if (type == "leftMove")
+	{
+		float moveSpeed = lua_tonumber(L, 3);
+		scene->SetComponent<Moving>(entity, -moveSpeed);
+	}
+	else if (type == "jump")
+	{
+		float force = lua_tonumber(L, 3);
+		scene->SetComponent<Jumping>(entity, -force);
+	}
 	return 0;
 }
 
