@@ -9,7 +9,10 @@ if key == D then
 end
 if key == SPACE then
 	force = force + 2;
-	if force >= 50 then force = 50 end
+	if force >= 8 then
+		force = 8
+	end
+	scene.SetComponent(entity, "jump", 0)
 end
 if key == nil and force ~= 0 then
 	print(force)
