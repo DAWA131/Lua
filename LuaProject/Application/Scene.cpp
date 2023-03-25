@@ -33,7 +33,6 @@ void Scene::lua_openscene(lua_State* L, Scene* scene)
 
 	lua_pushlightuserdata(L, scene);
 	luaL_setfuncs(L, methods, 1); // 1 : one upvalue ( lightuserdata )
-	
 	lua_setglobal(L, "scene");
 }
 
@@ -186,6 +185,21 @@ int Scene::lua_SetComponent(lua_State* L)
 	{
 		scene->SetComponent<Drawable>(entity);
 	}
+	else if (type == "rightMove")
+	{
+		float moveSpeed = lua_tonumber(L, 3);
+		scene->SetComponent<Moving>(entity, moveSpeed);
+	}
+	else if (type == "leftMove")
+	{
+		float moveSpeed = lua_tonumber(L, 3);
+		scene->SetComponent<Moving>(entity, -moveSpeed);
+	}
+	else if (type == "jump")
+	{
+		float force = lua_tonumber(L, 3);
+		scene->SetComponent<Jumping>(entity, -force);
+	}
 	return 0;
 }
 
@@ -198,5 +212,7 @@ int Scene::lua_RemoveComponent(lua_State* L)
 		scene->RemoveComponent<Health>(entity);
 	else if (type == "poison")
 		scene->RemoveComponent<Poison>(entity);
+	else if (type == "move")
+		scene->RemoveComponent<Moving>(entity);
 	return 0;
 }

@@ -13,7 +13,12 @@ struct Poison
 
 struct Moving
 {
-	float x;
+	float Xspeed;
+};
+
+struct Jumping
+{
+	float ySpeed;
 };
 
 struct Player
@@ -25,8 +30,9 @@ struct Drawable
 {
 	sf::CircleShape shape;
 
-	Drawable() : shape(100.f)
+	Drawable() : shape(5.f)
 	{
 		shape.setFillColor(sf::Color::Green);
+		shape.setPosition(400, 750);
 	}
 };

@@ -163,18 +163,14 @@
     <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="keyInput.lua" />
-    <None Include="monster.lua" />
-    <None Include="sceneDemo.lua" />
-    <None Include="setup.lua" />
-    <None Include="transform.lua" />
-    <None Include="transformDemo.lua" />
-    <None Include="vector.lua" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Components.hpp" />
     <ClInclude Include="Scene.hpp" />
     <ClInclude Include="Systems.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="luaScripts\keyInput.lua" />
+    <None Include="luaScripts\sceneDemo.lua" />
+    <None Include="luaScripts\setup.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
