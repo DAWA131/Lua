@@ -94,8 +94,13 @@ int main()
 	scene.CreateSystem<Draw>(window);
 
 	luaL_dofile(L, "luaScripts/setup.lua");
-	luaL_dofile(L, "luaScripts/fileReader.lua");
-	luaL_dofile(L, "luaScripts/maploader.lua");
+	//luaL_dofile(L, "luaScripts/fileReader.lua");
+	luaL_dofile(L, "luaScripts/replaceChar.lua");
+	//luaL_dofile(L, "luaScripts/maploader.lua");
+	luaL_dofile(L, "luaScripts/mapEditor.lua");
+	dumpError(L);
+	return 0;
+
 
 	/*
 	//POISON example
