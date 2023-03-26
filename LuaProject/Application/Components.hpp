@@ -26,10 +26,9 @@ struct Player
 	bool NonVoidStruct;
 };
 
-struct Position
+struct Collidable
 {
-	float xPos;
-	float yPos;
+	bool collide;
 };
 
 struct Drawable

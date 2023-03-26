@@ -71,8 +71,8 @@ class MovementSystem : public System
 public:
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
-		auto view = registry.view<Player, Drawable, Moving>(entt::exclude<Jumping>);
-		view.each([](Player& player, Drawable& shape, const Moving& moving)
+		auto view = registry.view<Drawable, Moving, Player>(entt::exclude<Jumping>);
+		view.each([](Drawable& shape, const Moving& moving, const Player& player)
 			{
 				shape.sprite.move(moving.Xspeed, 0.f);
 			}
@@ -86,42 +86,65 @@ class JumpSystem : public System
 public:
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
-		auto view = registry.view<Drawable, Jumping>();
-		view.each([](Drawable& shape, Jumping& jump)
+		auto view = registry.view<Drawable, Jumping, Player>();
+		view.each([&](entt::entity entity, Drawable& shape, Jumping& jump, const Player& player)
 			{
-				shape.sprite.move(0.f, jump.ySpeed);
 				jump.ySpeed = jump.ySpeed + 0.05;
+				shape.sprite.move(0.f, jump.ySpeed);
 			}
 		);
 		return false;
 	}
 };
 
-class CollisionSystem : public System
+class EdgeSystem : public System
 {
 public:
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
-		auto view = registry.view<Drawable>();
-		view.each([](Drawable& shape)
+		auto view = registry.view<Drawable, Player>();
+		view.each([](Drawable& shape, const Player& player)
 			{
 				if (shape.sprite.getPosition().x < 0)
 				shape.sprite.setPosition(0.f, shape.sprite.getPosition().y);
-				else if (shape.sprite.getPosition().x > 790)
-					shape.sprite.setPosition(790, shape.sprite.getPosition().y);
-
-		if (shape.sprite.getPosition().y > 750)
-			shape.sprite.setPosition(shape.sprite.getPosition().x, 750);
+				else if (shape.sprite.getPosition().x > 750)
+					shape.sprite.setPosition(750, shape.sprite.getPosition().y);
+				
+				if (shape.sprite.getPosition().y > 800)
+					shape.sprite.setPosition(shape.sprite.getPosition().x, 800);
 			}
 		);
 
-		auto view2 = registry.view<Drawable, Jumping>();
-		view2.each([&](entt::entity entity, const Drawable& shape, const Jumping& jumping)
+		return false;
+	}
+};
+
+class CollisionSystem : public System
+{
+	lua_State* L;
+
+public:
+	CollisionSystem(lua_State* L) : L(L) {}
+	bool OnUpdate(entt::registry& registry, float delta) final
+	{
+		auto view = registry.view<Drawable, Collidable>();
+		view.each([&](Drawable& platforms, const Collidable& collidable)
 			{
-				if (shape.sprite.getPosition().y > 740)
-				registry.remove<Jumping>(entity);
-			}
-		);
+				auto playerView = registry.view<Drawable, Player>();
+				playerView.each([&](entt::entity entity, Drawable& sprite, const Player& player)
+					{
+						if (sprite.sprite.getGlobalBounds().intersects(platforms.sprite.getGlobalBounds()))
+						{
+							luaL_dofile(L, "playerCollide.lua");
+
+							if (platforms.sprite.getPosition().y > sprite.sprite.getPosition().y)
+								registry.remove<Jumping>(entity);
+
+							if (platforms.sprite.getPosition().x > sprite.sprite.getPosition().x)
+								sprite.sprite.setPosition(platforms.sprite.getPosition().x - platforms.sprite.getGlobalBounds().width, sprite.sprite.getPosition().y);
+						}
+					});
+			});
 
 		return false;
 	}

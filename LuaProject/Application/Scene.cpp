@@ -168,6 +168,7 @@ int Scene::lua_SetComponent(lua_State* L)
 	Scene* scene = lua_GetSceneUpValue(L);
 	int entity = lua_tointeger(L, 1);
 	std::string type = lua_tostring(L, 2);
+
 	if (type == "health")
 	{
 		float value = lua_tonumber(L, 3);
@@ -193,6 +194,11 @@ int Scene::lua_SetComponent(lua_State* L)
 			y = lua_tonumber(L, 5);
 		}
 		scene->SetComponent<Drawable>(entity, texName, x, y);
+	}
+	else if (type == "collidable")
+	{
+		bool coll = lua_toboolean(L, 3);
+		scene->SetComponent<Collidable>(entity, coll);
 	}
 	else if (type == "rightMove")
 	{
@@ -221,5 +227,7 @@ int Scene::lua_RemoveComponent(lua_State* L)
 		scene->RemoveComponent<Health>(entity);
 	else if (type == "poison")
 		scene->RemoveComponent<Poison>(entity);
+	else if (type == "stop")
+		scene->RemoveComponent<Moving>(entity);
 	return 0;
 }

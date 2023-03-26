@@ -84,7 +84,7 @@ int main()
 	std::thread consoleThread(luaThreadLoop, L);
 	luaL_openlibs(L);
 	std::cout << "Hello from c++" << "\n";
-	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(800, 800), "JumpKing ripoff");
+	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(768, 816), "JumpKing ripoff");
 
 	Scene scene;
 	Scene::lua_openscene(L, &scene);
@@ -93,7 +93,8 @@ int main()
 	//scene.CreateSystem<InfoSystem>();
 	scene.CreateSystem<MovementSystem>();
 	scene.CreateSystem<JumpSystem>();
-	scene.CreateSystem<CollisionSystem>();
+	//scene.CreateSystem<EdgeSystem>();
+	scene.CreateSystem<CollisionSystem>(L);
 	scene.CreateSystem<Draw>(window);
 
 	luaL_dofile(L, "luaScripts/setup.lua");
@@ -167,14 +168,14 @@ int main()
 	//	std::cout << "Iteration " << iterations << ", entities alive: " << registry.alive() << std::endl;
 	//}
 	*/
-	
-
-
-	//sf::CircleShape shape(100.f);
-	//shape.setFillColor(sf::Color::Green);
 
 	while (window->isOpen())
 	{
+		if (window->getSize().x != 768 || window->getSize().y != 816) {
+			// Reset the window size to the initial size
+			window->setSize(sf::Vector2u(768, 816));
+		}
+
 		sf::Event event;
 		while (window->pollEvent(event))
 		{
@@ -188,11 +189,10 @@ int main()
 				lua_pushboolean(L, true);
 				lua_setglobal(L, "moving");
 				luaL_dofile(L, "luaScripts/keyInput.lua");
-				dumpStack(L);
 			}
 			else if(event.type == sf::Event::KeyReleased)
 			{
-				lua_pushnil(L);
+				lua_pushinteger(L, event.key.code);
 				lua_setglobal(L, "key");
 				lua_pushboolean(L, false);
 				lua_setglobal(L, "moving");

@@ -4,27 +4,27 @@ local speed = 1.5
 
 -- Jumping
 if key == SPACE then
-    force = force + 2;
+    scene.SetComponent(playerEntity, "jump", 0)
+    force = force + 0.5;
     if force >= 8 then
         force = 8
     end
-    scene.SetComponent(entity, "jump", 0)
 end
 
---- Moving
+--- Walking
 if key == D then
-    scene.SetComponent(entity, "rightMove", speed)
+    scene.SetComponent(playerEntity, "rightMove", speed)
 end
 if key == A then
-    scene.SetComponent(entity, "leftMove", speed)
+    scene.SetComponent(playerEntity, "leftMove", speed)
 end
 
 ---- Released key
 if moving == false then
-    if key == SPACE    then
-        scene.SetComponent(entity, "jump", force)
+    if key == SPACE then
+        scene.SetComponent(playerEntity, "jump", force)
         force = 0
     else
-        scene.RemoveComponent(entity, "move")
+        scene.RemoveComponent(playerEntity, "stop")
     end
 end
