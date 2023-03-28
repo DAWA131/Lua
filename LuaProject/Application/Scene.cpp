@@ -200,15 +200,24 @@ int Scene::lua_SetComponent(lua_State* L)
 	}
 	else if (type == "rightMove")
 	{
-		float moveSpeed = lua_tonumber(L, 3);
-		bool setPos = lua_toboolean(L, 4);
-		scene->SetComponent<Moving>(entity, moveSpeed, setPos);
+		float moveX = lua_tonumber(L, 3);
+		float moveY = lua_tonumber(L, 4);
+		bool setPos = lua_toboolean(L, 5);
+		scene->SetComponent<Moving>(entity, moveX, moveY, setPos);
 	}
 	else if (type == "leftMove")
 	{
-		float moveSpeed = lua_tonumber(L, 3);
-		bool setPos = lua_toboolean(L, 4);
-		scene->SetComponent<Moving>(entity, -moveSpeed, setPos);
+		float moveX = lua_tonumber(L, 3);
+		float moveY = lua_tonumber(L, 4);
+		bool setPos = lua_toboolean(L, 5);
+		scene->SetComponent<Moving>(entity, -moveX, moveY, setPos);
+	}
+	else if (type == "upMove")
+	{
+		float moveX = lua_tonumber(L, 3);
+		float moveY = lua_tonumber(L, 4);
+		bool setPos = lua_toboolean(L, 5);
+		scene->SetComponent<Moving>(entity, moveX, moveY, setPos);
 	}
 	else if (type == "jump")
 	{

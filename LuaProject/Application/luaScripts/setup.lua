@@ -11,4 +11,4 @@ once = false
 local playerEntity = scene.CreateEntity()
 scene.SetComponent(playerEntity, "player", true);
 scene.SetComponent(entity, "collidable", true)
-scene.SetComponent(playerEntity, "drawable", "OverWorld/7.png", 400, 700);
+scene.SetComponent(playerEntity, "drawable", "OverWorld/player.png", 400, 700);

@@ -75,9 +75,9 @@ public:
 		view.each([](Drawable& shape, const Moving& moving, const Player& player)
 			{
 				if (moving.setPos)
-					shape.sprite.setPosition(moving.Xspeed, shape.sprite.getPosition().y);
+					shape.sprite.setPosition(moving.Xspeed, moving.Yspeed);
 				else
-					shape.sprite.move(moving.Xspeed, 0.f);
+					shape.sprite.move(moving.Xspeed, moving.Yspeed);
 			}
 		);
 		return false;
@@ -128,24 +128,23 @@ public:
 class CollisionSystem : public System
 {
 	lua_State* L;
-	bool collide;
+	bool falling;
 
 public:
-	CollisionSystem(lua_State* L, bool collide) : L(L), collide(collide) {}
+	CollisionSystem(lua_State* L, bool collide) : L(L), falling(falling) {}
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
-		collide = false;
-		lua_pushboolean(L, collide);
-		lua_setglobal(L, "collide");
+		falling = true;
+		lua_pushboolean(L, falling);
+		lua_setglobal(L, "falling");
 		
-
 		auto view = registry.view<Drawable, Collidable>();
 		view.each([&](Drawable& platforms, const Collidable& collidable)
 			{
 				auto playerView = registry.view<Drawable, Player>();
 				playerView.each([&](entt::entity entity, Drawable& sprite, const Player& player)
 					{
-						if (!collide && sprite.sprite.getGlobalBounds().intersects(platforms.sprite.getGlobalBounds()) &&
+						if (sprite.sprite.getGlobalBounds().intersects(platforms.sprite.getGlobalBounds()) &&
 							sprite.sprite.getPosition() != platforms.sprite.getPosition())
 						{
 							lua_pushnumber(L, sprite.sprite.getPosition().x);
@@ -160,9 +159,6 @@ public:
 
 							if (luaL_dofile(L, "luaScripts/playerCollide.lua") != LUA_OK)
 								std::cout << "Error\n";
-
-							lua_getglobal(L, "collide");
-							collide = lua_toboolean(L, -1);
 						}
 					});
 			});

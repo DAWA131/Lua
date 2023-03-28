@@ -4,10 +4,10 @@ local speed = 1.5
 
 --- Walking
 if key == D then
-    scene.SetComponent(playerEntity, "rightMove", speed, false)
+    scene.SetComponent(playerEntity, "rightMove", speed, 0.0, false)
 end
 if key == A then
-    scene.SetComponent(playerEntity, "leftMove", speed, false)
+    scene.SetComponent(playerEntity, "leftMove", speed, 0.0, false)
 end
 
 -- Jumping
