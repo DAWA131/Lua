@@ -32,6 +32,7 @@
     <None Include="luaScripts\setup.lua" />
     <None Include="luaScripts\fileReader.lua" />
     <None Include="luaScripts\maploader.lua" />
+    <None Include="luaScripts\aftercheck.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.hpp">

@@ -74,7 +74,10 @@ public:
 		auto view = registry.view<Drawable, Moving, Player>(entt::exclude<Jumping>);
 		view.each([](Drawable& shape, const Moving& moving, const Player& player)
 			{
-				shape.sprite.move(moving.Xspeed, 0.f);
+				if (moving.setPos)
+					shape.sprite.setPosition(moving.Xspeed, shape.sprite.getPosition().y);
+				else
+					shape.sprite.move(moving.Xspeed, 0.f);
 			}
 		);
 		return false;
@@ -89,8 +92,11 @@ public:
 		auto view = registry.view<Drawable, Jumping, Player>();
 		view.each([&](entt::entity entity, Drawable& shape, Jumping& jump, const Player& player)
 			{
-				jump.ySpeed = jump.ySpeed + 0.05;
-				shape.sprite.move(0.f, jump.ySpeed);
+				if (jump.ySpeed != 0.f)
+				{
+					jump.ySpeed = jump.ySpeed + 0.05;
+					shape.sprite.move(0.f, jump.ySpeed);
+				}
 			}
 		);
 		return false;
@@ -122,30 +128,47 @@ public:
 class CollisionSystem : public System
 {
 	lua_State* L;
+	bool collide;
 
 public:
-	CollisionSystem(lua_State* L) : L(L) {}
+	CollisionSystem(lua_State* L, bool collide) : L(L), collide(collide) {}
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
+		collide = false;
+		lua_pushboolean(L, collide);
+		lua_setglobal(L, "collide");
+		
+
 		auto view = registry.view<Drawable, Collidable>();
 		view.each([&](Drawable& platforms, const Collidable& collidable)
 			{
 				auto playerView = registry.view<Drawable, Player>();
 				playerView.each([&](entt::entity entity, Drawable& sprite, const Player& player)
 					{
-						if (sprite.sprite.getGlobalBounds().intersects(platforms.sprite.getGlobalBounds()))
+						if (!collide && sprite.sprite.getGlobalBounds().intersects(platforms.sprite.getGlobalBounds()) &&
+							sprite.sprite.getPosition() != platforms.sprite.getPosition())
 						{
-							luaL_dofile(L, "playerCollide.lua");
+							lua_pushnumber(L, sprite.sprite.getPosition().x);
+							lua_setglobal(L, "playerX");
+							lua_pushnumber(L, sprite.sprite.getPosition().y);
+							lua_setglobal(L, "playerY");
 
-							if (platforms.sprite.getPosition().y > sprite.sprite.getPosition().y)
-								registry.remove<Jumping>(entity);
+							lua_pushnumber(L, platforms.sprite.getPosition().x);
+							lua_setglobal(L, "platformX");
+							lua_pushnumber(L, platforms.sprite.getPosition().y);
+							lua_setglobal(L, "platformY");
 
-							if (platforms.sprite.getPosition().x > sprite.sprite.getPosition().x)
-								sprite.sprite.setPosition(platforms.sprite.getPosition().x - platforms.sprite.getGlobalBounds().width, sprite.sprite.getPosition().y);
+							if (luaL_dofile(L, "luaScripts/playerCollide.lua") != LUA_OK)
+								std::cout << "Error\n";
+
+							lua_getglobal(L, "collide");
+							collide = lua_toboolean(L, -1);
 						}
 					});
 			});
 
+		if (luaL_dofile(L, "luaScripts/aftercheck.lua") != LUA_OK)
+			std::cout << "Error\n";
 		return false;
 	}
 };

@@ -94,7 +94,7 @@ int main()
 	scene.CreateSystem<MovementSystem>();
 	scene.CreateSystem<JumpSystem>();
 	//scene.CreateSystem<EdgeSystem>();
-	scene.CreateSystem<CollisionSystem>(L);
+	scene.CreateSystem<CollisionSystem>(L, false);
 	scene.CreateSystem<Draw>(window);
 
 	luaL_dofile(L, "luaScripts/setup.lua");

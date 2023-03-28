@@ -14,6 +14,7 @@ struct Poison
 struct Moving
 {
 	float Xspeed;
+	bool setPos;
 };
 
 struct Jumping

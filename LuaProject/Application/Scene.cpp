@@ -122,14 +122,12 @@ int Scene::lua_HasComponent(lua_State* L)
 	std::string type = lua_tostring(L, 2);
 	bool hasComponent = false;
 
-	if (type == "health") {
+	if (type == "health")
 		hasComponent = scene->HasComponents<Health>(entity);
-		return 1;
-	}
-	else if (type == "poison") {
+	else if (type == "poison")
 		hasComponent = scene->HasComponents<Poison>(entity);
-		return 1;
-	}
+	else if (type == "jump")
+		hasComponent = scene->HasComponents<Jumping>(entity);
 
 	lua_pushboolean(L, hasComponent);
 	return 1;
@@ -203,12 +201,14 @@ int Scene::lua_SetComponent(lua_State* L)
 	else if (type == "rightMove")
 	{
 		float moveSpeed = lua_tonumber(L, 3);
-		scene->SetComponent<Moving>(entity, moveSpeed);
+		bool setPos = lua_toboolean(L, 4);
+		scene->SetComponent<Moving>(entity, moveSpeed, setPos);
 	}
 	else if (type == "leftMove")
 	{
 		float moveSpeed = lua_tonumber(L, 3);
-		scene->SetComponent<Moving>(entity, -moveSpeed);
+		bool setPos = lua_toboolean(L, 4);
+		scene->SetComponent<Moving>(entity, -moveSpeed, setPos);
 	}
 	else if (type == "jump")
 	{
@@ -227,7 +227,9 @@ int Scene::lua_RemoveComponent(lua_State* L)
 		scene->RemoveComponent<Health>(entity);
 	else if (type == "poison")
 		scene->RemoveComponent<Poison>(entity);
-	else if (type == "stop")
+	else if (type == "move")
 		scene->RemoveComponent<Moving>(entity);
+	else if (type == "jump")
+		scene->RemoveComponent<Jumping>(entity);
 	return 0;
 }

@@ -163,6 +163,7 @@
     <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="luaScripts\aftercheck.lua" />
     <None Include="luaScripts\fileReader.lua" />
     <None Include="luaScripts\keyInput.lua" />
     <None Include="luaScripts\maploader.lua" />
