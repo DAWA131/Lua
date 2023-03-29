@@ -221,8 +221,9 @@ int Scene::lua_SetComponent(lua_State* L)
 	}
 	else if (type == "jump")
 	{
-		float force = lua_tonumber(L, 3);
-		scene->SetComponent<Jumping>(entity, -force);
+		float xSpeed = lua_tonumber(L, 3);
+		float ySpeed = lua_tonumber(L, 4);
+		scene->SetComponent<Jumping>(entity, xSpeed, -ySpeed);
 	}
 	return 0;
 }

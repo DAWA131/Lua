@@ -20,6 +20,7 @@ struct Moving
 
 struct Jumping
 {
+	float xSpeed;
 	float ySpeed;
 };
 

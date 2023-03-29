@@ -2,7 +2,11 @@
 A = 0
 D = 3
 SPACE = 57
-force = 0;
+force = 0.0
+direction = 0.0
+keyDown = -1
+key1 = -1
+key2 = -1
 once = false
 
 --dofile("luaScripts/fileReader.lua")

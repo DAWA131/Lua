@@ -12,7 +12,7 @@ if platformY > playerY then
 end
 
 if platformY < playerY and falling == true then
-	scene.SetComponent(playerEntity, "jump", -2.0)
+	scene.SetComponent(playerEntity, "jump", 0.0, -2.0)
 end
 
 -- X Collision

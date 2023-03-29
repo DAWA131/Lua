@@ -95,7 +95,7 @@ public:
 				if (jump.ySpeed != 0.f)
 				{
 					jump.ySpeed = jump.ySpeed + 0.05;
-					shape.sprite.move(0.f, jump.ySpeed);
+					shape.sprite.move(jump.xSpeed, jump.ySpeed);
 				}
 			}
 		);

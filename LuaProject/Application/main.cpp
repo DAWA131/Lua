@@ -190,7 +190,7 @@ int main()
 				lua_setglobal(L, "moving");
 				luaL_dofile(L, "luaScripts/keyInput.lua");
 			}
-			else if(event.type == sf::Event::KeyReleased)
+			else if (event.type == sf::Event::KeyReleased)
 			{
 				lua_pushinteger(L, event.key.code);
 				lua_setglobal(L, "key");
