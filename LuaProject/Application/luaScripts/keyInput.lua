@@ -1,5 +1,5 @@
---local speed = 1.5
-local speed = 0.1
+local speed = 1.5
+--local speed = 0.1
 
 -- Checking for two inputs
 if moving == true and key1 == -1 then
@@ -16,17 +16,17 @@ end
 
 -- Checking double movement
 if (key1 == SPACE and key2 == D) or (key1 == D and key2 == SPACE) then
-    direction = 8.0
-    force = force + 0.5
-    if force >= 8 then
-        force = 8
+    force = force + 1.0
+    if force >= 10 then
+        force = 10
     end
+    direction = force
 elseif (key1 == SPACE and key2 == A) or (key1 == A and key2 == SPACE) then
-    direction = -8.0
-    force = force + 0.5;
-    if force >= 8 then
-        force = 8
+    force = force + 1.0;
+    if force >= 10 then
+        force = 10
     end
+    direction = -force
 end
 
 --- Walking
@@ -40,9 +40,9 @@ end
 -- Jumping
 if key == SPACE then
     scene.SetComponent(playerEntity, "jump", 0.0, 0.0)
-    force = force + 0.5;
-    if force >= 8 then
-        force = 8
+    force = force + 1.0;
+    if force >= 10 then
+        force = 10
     end
 end
 
