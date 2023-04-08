@@ -27,6 +27,8 @@ function replaceChar(file_path, x, y, replacement_char)
     end
     char_index = char_index + (y * 2) -- Add 2 characters for each line break
 
+    if string.sub(line, x, x) ~= "0" then Istile = "a" end
+
     -- Replace the character
     file_lines[y] = string.sub(line, 1, x - 1) .. replacement_char .. string.sub(line, x + 1)
 

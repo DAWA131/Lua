@@ -25,7 +25,7 @@ if Istile == nil then
 	local currentY = tileY * 48;
 	entity = scene.CreateEntity()
 	scene.SetComponent(entity, "player", true);
-	scene.SetComponent(entity, "drawable", "Overworld/" .. "2" .. ".png" , currentX, currentY);
+	scene.SetComponent(entity, "drawable", "Overworld/" .. 2 .. ".png" , currentX, currentY);
 end
 
 --print("done")
