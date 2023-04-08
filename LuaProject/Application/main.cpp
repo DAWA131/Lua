@@ -94,12 +94,12 @@ int main()
 	scene.CreateSystem<Draw>(window);
 
 	luaL_dofile(L, "luaScripts/setup.lua");
-	//luaL_dofile(L, "luaScripts/fileReader.lua");
+	luaL_dofile(L, "luaScripts/fileReader.lua");
 	luaL_dofile(L, "luaScripts/replaceChar.lua");
-	//luaL_dofile(L, "luaScripts/maploader.lua");
+	luaL_dofile(L, "luaScripts/maploader.lua");
+	luaL_dofile(L, "luaScripts/newScreen.lua");
 	luaL_dofile(L, "luaScripts/mapEditor.lua");
 	dumpError(L);
-	return 0;
 
 
 	/*
@@ -183,6 +183,10 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window->close();
 
+			if (event.key.code == sf::Mouse::Left)
+			{
+				std::cout << "X: " << sf::Mouse::getPosition().x - window->getPosition().x << " Y: " << sf::Mouse::getPosition().y - window->getPosition().y << "\n";
+			}
 			if (event.type == sf::Event::KeyPressed)
 			{
 				lua_pushinteger(L, event.key.code);
