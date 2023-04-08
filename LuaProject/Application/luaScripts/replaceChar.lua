@@ -1,7 +1,10 @@
 function replaceChar(file_path, x, y, replacement_char)
-    x = x - 1
+    y = y + 1;
+    --x = x - 1
     x = x * 2;
     if x % 2 == 0 then x = x + 1 end
+
+    print("replacing on x: " .. x .. " y: " .. y .. " with: " .. replacement_char)
 
     local file = io.open(file_path, 'r')
     local file_lines = {}
