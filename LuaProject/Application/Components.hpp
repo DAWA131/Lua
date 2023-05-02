@@ -29,6 +29,7 @@ struct Position
 
 struct Drawable
 {
+public:
 	sf::Sprite sprite;
 	sf::Texture tex;
 

@@ -26,7 +26,8 @@ void Scene::lua_openscene(lua_State* L, Scene* scene)
 		{"GetComponent", lua_GetComponent},
 		{"SetComponent", lua_SetComponent},
 		{"RemoveComponent", lua_RemoveComponent},
-
+		{"SetPosition", lua_SetPosition},
+		{"RemoveTile", lua_RemoveTile},
 
 		{NULL, NULL}
 	};
@@ -206,5 +207,37 @@ int Scene::lua_RemoveComponent(lua_State* L)
 		scene->RemoveComponent<Health>(entity);
 	else if (type == "poison")
 		scene->RemoveComponent<Poison>(entity);
+	return 0;
+}
+
+int Scene::lua_SetPosition(lua_State* L)
+{
+	Scene* scene = lua_GetSceneUpValue(L);
+	int entityToMove = lua_tointeger(L, 1);
+	float x = lua_tonumber(L, 2);
+	float y = lua_tonumber(L, 3);
+
+	auto view = scene->m_registry.view<Drawable>();
+	view.each([&](entt::entity entity, Drawable& sprite) {
+		if ((int)entity == entityToMove)
+		{
+			sprite.sprite.setPosition(x,y);
+		}
+		});
+	return 0;
+}
+
+int Scene::lua_RemoveTile(lua_State* L)
+{
+	Scene* scene = lua_GetSceneUpValue(L);
+	int x = lua_tointeger(L, 1);
+	int y = lua_tointeger(L, 2);
+	x *= 48;
+	y *= 48;
+	//auto view = scene->m_registry.view<Drawable>(entt::exclude<Player>);
+	auto view = scene->m_registry.view<Drawable>(entt::exclude<Player>);
+	view.each([&](entt::entity entity, Drawable& sprite) {
+			scene->RemoveEntity((int)entity);
+		});
 	return 0;
 }

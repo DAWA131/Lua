@@ -3,7 +3,7 @@
 print("start")
 local line = readLineFromFile("luaScripts/map.txt", 1)
 if line == nil then print("ERROR: cant find file") end
-local ofset = line
+local ofset = 48
 local lineNum = 1;
 
 local currentX = 0;
@@ -25,8 +25,7 @@ while line ~= nil do
             sub = string.match(subStr, "%S+")
             if sub ~= "0" then
                 print("elemnt found name: " .. sub .. "with pos Y: " .. currentX .. "and Y: " .. currentY)
-                entity = scene.CreateEntity()
-                scene.SetComponent(entity, "player", true);
+                local entity = scene.CreateEntity()
                 scene.SetComponent(entity, "drawable", "Overworld/" .. sub .. ".png" , currentX, currentY);
             end
             pos = spacePos + 1

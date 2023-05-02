@@ -16,16 +16,23 @@ tileY = tileY + 1;
 --print("LUA: X: " .. tileX .. " Y: " .. tileY)
 
 Istile = nil
-replaceChar("luaScripts/map.txt", tileX, tileY, "2")
+replaceChar("luaScripts/map.txt", tileX, tileY, "1")
 tileY = tileY - 1;
 
-
-if Istile == nil then
 	local currentX = tileX * 48;
 	local currentY = tileY * 48;
-	entity = scene.CreateEntity()
-	scene.SetComponent(entity, "player", true);
-	scene.SetComponent(entity, "drawable", "Overworld/" .. 2 .. ".png" , currentX, currentY);
+
+if Istile == nil then
+	local entity = scene.CreateEntity()
+	scene.SetComponent(entity, "drawable", "Overworld/" .. 1 .. ".png" , currentX, currentY);
+
 end
+if Istile ~= nil then
+print("removing a tile")
+	scene.RemoveTile(tileX, tileY)
+	dofile("luaScripts/maploader.lua")
+end
+
+scene.SetPosition(indicator, currentX, currentY)
 
 --print("done")

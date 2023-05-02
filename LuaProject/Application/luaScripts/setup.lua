@@ -7,6 +7,7 @@ force = 0;
 local entity = scene.CreateEntity()
 scene.SetComponent(entity, "player", true);
 scene.SetComponent(entity, "drawable", "OverWorld/border.png");
+indicator = entity
 
 --dofile("luaScripts/fileReader.lua")
 

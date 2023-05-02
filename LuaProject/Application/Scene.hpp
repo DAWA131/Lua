@@ -47,6 +47,9 @@ private:
 	static int lua_GetComponent(lua_State* L);
 	static int lua_SetComponent(lua_State* L);
 	static int lua_RemoveComponent(lua_State* L);
+
+	static int lua_SetPosition(lua_State* L);
+	static int lua_RemoveTile(lua_State* L);
 };
 
 template<typename ...Args>

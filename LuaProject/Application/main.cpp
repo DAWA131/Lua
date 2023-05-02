@@ -180,10 +180,17 @@ int main()
 		while (window->pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
+			{
 				window->close();
+				consoleThread.join();
+			}
 
 			if (event.key.code == sf::Mouse::Left)
 			{
+				if (event.type == sf::Event::MouseButtonReleased)
+				{
+					continue;
+				}
 				lua_pushinteger(L, (int)((sf::Mouse::getPosition().x - 8) - window->getPosition().x));
 				lua_setglobal(L, "mouseX");
 
