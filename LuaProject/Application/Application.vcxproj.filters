@@ -35,6 +35,8 @@
     <None Include="luaScripts\mapEditor.lua" />
     <None Include="luaScripts\replaceChar.lua" />
     <None Include="luaScripts\newScreen.lua" />
+    <None Include="luaScripts\aftercheck.lua" />
+    <None Include="luaScripts\playerCollide.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.hpp">

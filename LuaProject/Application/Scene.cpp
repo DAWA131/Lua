@@ -123,14 +123,12 @@ int Scene::lua_HasComponent(lua_State* L)
 	std::string type = lua_tostring(L, 2);
 	bool hasComponent = false;
 
-	if (type == "health") {
+	if (type == "health")
 		hasComponent = scene->HasComponents<Health>(entity);
-		return 1;
-	}
-	else if (type == "poison") {
+	else if (type == "poison")
 		hasComponent = scene->HasComponents<Poison>(entity);
-		return 1;
-	}
+	else if (type == "jump")
+		hasComponent = scene->HasComponents<Jumping>(entity);
 
 	lua_pushboolean(L, hasComponent);
 	return 1;
@@ -169,6 +167,7 @@ int Scene::lua_SetComponent(lua_State* L)
 	Scene* scene = lua_GetSceneUpValue(L);
 	int entity = lua_tointeger(L, 1);
 	std::string type = lua_tostring(L, 2);
+
 	if (type == "health")
 	{
 		float value = lua_tonumber(L, 3);
@@ -195,6 +194,38 @@ int Scene::lua_SetComponent(lua_State* L)
 		}
 		scene->SetComponent<Drawable>(entity, texName, x, y);
 	}
+	else if (type == "collidable")
+	{
+		bool coll = lua_toboolean(L, 3);
+		scene->SetComponent<Collidable>(entity, coll);
+	}
+	else if (type == "rightMove")
+	{
+		float moveX = lua_tonumber(L, 3);
+		float moveY = lua_tonumber(L, 4);
+		bool setPos = lua_toboolean(L, 5);
+		scene->SetComponent<Moving>(entity, moveX, moveY, setPos);
+	}
+	else if (type == "leftMove")
+	{
+		float moveX = lua_tonumber(L, 3);
+		float moveY = lua_tonumber(L, 4);
+		bool setPos = lua_toboolean(L, 5);
+		scene->SetComponent<Moving>(entity, -moveX, moveY, setPos);
+	}
+	else if (type == "upMove")
+	{
+		float moveX = lua_tonumber(L, 3);
+		float moveY = lua_tonumber(L, 4);
+		bool setPos = lua_toboolean(L, 5);
+		scene->SetComponent<Moving>(entity, moveX, moveY, setPos);
+	}
+	else if (type == "jump")
+	{
+		float xSpeed = lua_tonumber(L, 3);
+		float ySpeed = lua_tonumber(L, 4);
+		scene->SetComponent<Jumping>(entity, xSpeed, -ySpeed);
+	}
 	return 0;
 }
 
@@ -207,6 +238,10 @@ int Scene::lua_RemoveComponent(lua_State* L)
 		scene->RemoveComponent<Health>(entity);
 	else if (type == "poison")
 		scene->RemoveComponent<Poison>(entity);
+	else if (type == "move")
+		scene->RemoveComponent<Moving>(entity);
+	else if (type == "jump")
+		scene->RemoveComponent<Jumping>(entity);
 	return 0;
 }
 
