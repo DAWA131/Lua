@@ -9,6 +9,10 @@ key1 = -1
 key2 = -1
 once = false
 
+local entity = scene.CreateEntity()
+scene.SetComponent(entity, "player", true);
+scene.SetComponent(entity, "drawable", "OverWorld/border.png");
+
 --dofile("luaScripts/fileReader.lua")
 --dofile("luaScripts/maploader.lua")
 

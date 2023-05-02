@@ -99,7 +99,11 @@ int main()
 
 	luaL_dofile(L, "luaScripts/setup.lua");
 	luaL_dofile(L, "luaScripts/fileReader.lua");
+	luaL_dofile(L, "luaScripts/replaceChar.lua");
 	luaL_dofile(L, "luaScripts/maploader.lua");
+	luaL_dofile(L, "luaScripts/newScreen.lua");
+	dumpError(L);
+
 
 	/*
 	//POISON example
@@ -182,6 +186,19 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window->close();
 
+			if (event.key.code == sf::Mouse::Left)
+			{
+				lua_pushinteger(L, (int)((sf::Mouse::getPosition().x - 8) - window->getPosition().x));
+				lua_setglobal(L, "mouseX");
+
+				lua_pushinteger(L, (int)((sf::Mouse::getPosition().y - 31) - window->getPosition().y));
+				lua_setglobal(L, "mouseY");
+
+				luaL_dofile(L, "luaScripts/mapEditor.lua");
+
+
+				std::cout << "X: " << (int)((sf::Mouse::getPosition().x-8) - window->getPosition().x)/48 << " Y: " << (int)((sf::Mouse::getPosition().y-31) - window->getPosition().y)/48 << "\n";
+			}
 			if (event.type == sf::Event::KeyPressed)
 			{
 				lua_pushinteger(L, event.key.code);

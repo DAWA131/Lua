@@ -166,8 +166,11 @@
     <None Include="luaScripts\aftercheck.lua" />
     <None Include="luaScripts\fileReader.lua" />
     <None Include="luaScripts\keyInput.lua" />
+    <None Include="luaScripts\mapEditor.lua" />
     <None Include="luaScripts\maploader.lua" />
     <None Include="luaScripts\playerCollide.lua" />
+    <None Include="luaScripts\newScreen.lua" />
+    <None Include="luaScripts\replaceChar.lua" />
     <None Include="monster.lua" />
     <None Include="luaScripts\sceneDemo.lua" />
     <None Include="luaScripts\setup.lua" />
