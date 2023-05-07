@@ -79,6 +79,30 @@ void dumpStack(lua_State* L)
 
 int main()
 {
+	const int nrOne = 0;
+	const int nrTwo = 2;
+	const int nrThree = 3;
+	const int list[3] = { 0, 2, 3 };
+	std::vector<int> listt;
+	int v1=0;
+	for (size_t i = 0; i < 100; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			listt.push_back(list[j]);
+		}
+		std::cout << i << ":: ";
+		while (listt.size() != 0)
+		{
+			v1 = rand() % listt.size();
+			std::cout << listt[v1] << " : ";
+			listt.erase(listt.begin() + v1);
+		}
+		std::cout << std::endl;
+		
+	}
+	return 0;
+
 	entt::registry registry;
 	lua_State* L = luaL_newstate();
 	std::thread consoleThread(luaThreadLoop, L);
@@ -88,9 +112,6 @@ int main()
 
 	Scene scene;
 	Scene::lua_openscene(L, &scene);
-	//scene.CreateSystem<CleanupSystem>();
-	//scene.CreateSystem<PoisonSystem>(100);
-	//scene.CreateSystem<InfoSystem>();
 	scene.CreateSystem<MovementSystem>();
 	scene.CreateSystem<JumpSystem>();
 	//scene.CreateSystem<EdgeSystem>();
@@ -104,74 +125,6 @@ int main()
 	luaL_dofile(L, "luaScripts/newScreen.lua");
 	dumpError(L);
 
-
-	/*
-	//POISON example
-	//srand(time(NULL));
-	//for (int i = 0; i < 100; i++)
-	//{
-	//	auto entity = registry.create();
-	//	registry.emplace<Health>(entity, 100.f);
-	//	float tickDamage = rand() % 10 + 1;
-	//	registry.emplace<Poison>(entity, tickDamage);
-	//}
-
-	//int iterations = 0;
-	//while (registry.alive())
-	//{
-	//	//Poison system
-	//	{
-	//		auto view = registry.view<Health, Poison>();
-	//		view.each([](Health& health, const Poison& poison)
-	//			{
-	//				health.Value -= poison.TickDamage;
-	//			});
-	//	}
-
-	//	//Cleanup system
-	//	{
-	//		auto view = registry.view<Health>();
-	//		view.each([&](entt::entity entity, const Health& health)
-	//			{
-	//				if (health.Value <= 0.f)
-	//				{
-	//					registry.destroy(entity);
-	//				}
-	//			});
-	//	}
-
-	//	//Cure system
-	//	{
-	//		float cure = rand() % 20;
-	//		if (cure == 0)
-	//		{
-	//			auto view = registry.view<Poison>();
-	//			view.each([&](entt::entity entity, const Poison& poison)
-	//				{
-	//					registry.remove<Poison>(entity);
-	//					//std::cout << "Cured\n";
-	//				});
-	//		}
-	//	}
-
-	//	//Spawn poison system
-	//	{
-	//		auto view = registry.view<Health>(entt::exclude<Poison>);
-	//		view.each([&](entt::entity entity, const Health& health)
-	//			{
-	//				if ((rand() % 4) == 0)
-	//				{
-	//					float damage = rand() % 11 + 1;
-	//					registry.emplace<Poison>(entity, damage);
-	//					//std::cout << "Poisoned entity " << (int)entity << std::endl;
-	//				}
-	//			});
-	//	}
-
-	//	iterations++;
-	//	std::cout << "Iteration " << iterations << ", entities alive: " << registry.alive() << std::endl;
-	//}
-	*/
 
 	while (window->isOpen())
 	{
@@ -201,7 +154,7 @@ int main()
 				lua_pushinteger(L, (int)((sf::Mouse::getPosition().y - 31) - window->getPosition().y));
 				lua_setglobal(L, "mouseY");
 
-				luaL_dofile(L, "luaScripts/mapEditor.lua");
+				//luaL_dofile(L, "luaScripts/mapEditor.lua");
 
 
 				std::cout << "X: " << (int)((sf::Mouse::getPosition().x-8) - window->getPosition().x)/48 << " Y: " << (int)((sf::Mouse::getPosition().y-31) - window->getPosition().y)/48 << "\n";
