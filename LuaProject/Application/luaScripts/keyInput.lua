@@ -1,4 +1,4 @@
-local speed = 1.5
+local speed = 0.5
 --local speed = 0.1
 
 -- Checking for two inputs

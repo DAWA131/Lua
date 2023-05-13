@@ -81,7 +81,7 @@ int main()
 {
 	entt::registry registry;
 	lua_State* L = luaL_newstate();
-	std::thread consoleThread(luaThreadLoop, L);
+	//std::thread consoleThread(luaThreadLoop, L);
 	luaL_openlibs(L);
 	std::cout << "Hello from c++" << "\n";
 	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(768, 816), "JumpKing ripoff");
@@ -103,75 +103,6 @@ int main()
 	luaL_dofile(L, "luaScripts/maploader.lua");
 	luaL_dofile(L, "luaScripts/newScreen.lua");
 	dumpError(L);
-
-
-	/*
-	//POISON example
-	//srand(time(NULL));
-	//for (int i = 0; i < 100; i++)
-	//{
-	//	auto entity = registry.create();
-	//	registry.emplace<Health>(entity, 100.f);
-	//	float tickDamage = rand() % 10 + 1;
-	//	registry.emplace<Poison>(entity, tickDamage);
-	//}
-
-	//int iterations = 0;
-	//while (registry.alive())
-	//{
-	//	//Poison system
-	//	{
-	//		auto view = registry.view<Health, Poison>();
-	//		view.each([](Health& health, const Poison& poison)
-	//			{
-	//				health.Value -= poison.TickDamage;
-	//			});
-	//	}
-
-	//	//Cleanup system
-	//	{
-	//		auto view = registry.view<Health>();
-	//		view.each([&](entt::entity entity, const Health& health)
-	//			{
-	//				if (health.Value <= 0.f)
-	//				{
-	//					registry.destroy(entity);
-	//				}
-	//			});
-	//	}
-
-	//	//Cure system
-	//	{
-	//		float cure = rand() % 20;
-	//		if (cure == 0)
-	//		{
-	//			auto view = registry.view<Poison>();
-	//			view.each([&](entt::entity entity, const Poison& poison)
-	//				{
-	//					registry.remove<Poison>(entity);
-	//					//std::cout << "Cured\n";
-	//				});
-	//		}
-	//	}
-
-	//	//Spawn poison system
-	//	{
-	//		auto view = registry.view<Health>(entt::exclude<Poison>);
-	//		view.each([&](entt::entity entity, const Health& health)
-	//			{
-	//				if ((rand() % 4) == 0)
-	//				{
-	//					float damage = rand() % 11 + 1;
-	//					registry.emplace<Poison>(entity, damage);
-	//					//std::cout << "Poisoned entity " << (int)entity << std::endl;
-	//				}
-	//			});
-	//	}
-
-	//	iterations++;
-	//	std::cout << "Iteration " << iterations << ", entities alive: " << registry.alive() << std::endl;
-	//}
-	*/
 
 	while (window->isOpen())
 	{
