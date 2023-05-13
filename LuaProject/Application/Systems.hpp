@@ -12,60 +12,6 @@ public:
 	virtual bool OnUpdate(entt::registry& registry, float delta) = 0;
 };
 
-class PoisonSystem : public System
-{
-	int m_lifetime;
-
-public:
-
-	PoisonSystem(int lifetime) : m_lifetime(lifetime) {}
-	bool OnUpdate(entt::registry& registry, float delta) final
-	{
-		auto view = registry.view<Health, Poison>();
-		view.each([](Health& health, const Poison& poison) {
-			health.Value -= poison.TickDamage;
-			});
-
-		return (--m_lifetime) <= 0;
-	}
-};
-
-class CleanupSystem : public System
-{
-public:
-	bool OnUpdate(entt::registry& registry, float delta)
-		final
-	{
-		auto view = registry.view < Health >();
-		view.each([&](entt::entity entity, const Health&
-			health) {
-				if (health.Value <= 0.f)
-				{
-					registry.destroy(entity);
-				}
-			});
-		return false;
-	}
-};
-
-class InfoSystem : public System
-{
-	int m_updateCounter = 0;
-public:
-	InfoSystem() = default;
-	bool OnUpdate(entt::registry& registry, float delta)
-		final
-	{
-		int count = registry.alive();
-		auto healthView = registry.view<Health>();
-		auto poisonView = registry.view<Poison>();
-		printf("\n--Update %i--\n", ++m_updateCounter);
-		printf("Living entities:\t%i\n", healthView.size());
-		printf("Poisoned entities:\t%i\n", poisonView.size());
-		return false;
-	}
-};
-
 class MovementSystem : public System
 {
 public:
@@ -185,6 +131,33 @@ public:
 			}
 		);
 		window->display();
+		return false;
+	}
+};
+
+class screenChangeSystem : public System
+{
+	lua_State* L;
+	int WINDOWHEIGHT;
+public:
+	screenChangeSystem(lua_State* L, int screenHeight) : L(L), WINDOWHEIGHT(screenHeight){}
+	bool OnUpdate(entt::registry& registry, float delta) final
+	{
+		auto View = registry.view<Drawable, Player>();
+		View.each([&](entt::entity entity, Drawable& sprite, const Player& player)
+		{
+			if (sprite.sprite.getPosition().y < 0 || sprite.sprite.getPosition().y > WINDOWHEIGHT)
+			{
+				lua_pushnumber(L, sprite.sprite.getPosition().y);
+				lua_setglobal(L, "playerY");
+				lua_pushnumber(L, sprite.sprite.getPosition().x);
+				lua_setglobal(L, "playerX");
+				if (luaL_dofile(L, "luaScripts/screenHandler.lua") != LUA_OK)
+				{
+					std::cout << "Error Lua file not found!\n";
+				}
+			}
+		});
 		return false;
 	}
 };

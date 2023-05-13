@@ -24,6 +24,22 @@
 //#pragma comment(lib, "sfml-graphics.lib")
 //#endif
 
+#include <chrono>
+
+void limitFPS(int desiredFPS) {
+	static std::chrono::steady_clock::time_point prevTime = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+	std::chrono::duration<double, std::milli> elapsedTime = currentTime - prevTime;
+	std::chrono::duration<double, std::milli> frameTime(1000.0 / desiredFPS);
+
+	if (elapsedTime < frameTime) 
+	{
+		std::this_thread::sleep_for(frameTime - elapsedTime);
+	}
+
+	prevTime = std::chrono::steady_clock::now();
+}
+
 void dumpError(lua_State* L)
 {
 	if (lua_gettop(L) && lua_isstring(L, -1))
@@ -93,6 +109,7 @@ int main()
 	//scene.CreateSystem<EdgeSystem>();
 	scene.CreateSystem<CollisionSystem>(L, false);
 	scene.CreateSystem<Draw>(window);
+	scene.CreateSystem<screenChangeSystem>(L, 816);
 
 	luaL_dofile(L, "luaScripts/setup.lua");
 	luaL_dofile(L, "luaScripts/fileReader.lua");
@@ -154,6 +171,8 @@ int main()
 			dumpError(L);
 		}
 		scene.UpdateSystems(1);
+
+		//limitFPS(60);
 	}
 
 	delete window;

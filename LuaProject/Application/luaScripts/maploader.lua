@@ -1,8 +1,11 @@
 --local fileReader = require("readLineFromFile")
 
 print("start")
-local line = readLineFromFile("luaScripts/map.txt", 1)
-if line == nil then print("ERROR: cant find file") end
+local mapToLoad = "luaScripts/" .. currentLevel .. ".txt"
+print(mapToLoad)
+--local line = readLineFromFile("luaScripts/map.txt", 1)
+local line = readLineFromFile(mapToLoad, 1)
+if line == nil then print("ERROR: cant find map file") end
 local ofset = 48
 local lineNum = 1;
 
@@ -12,7 +15,7 @@ local subStr;
 
 while line ~= nil do
     lineNum = lineNum + 1;
-    local line = readLineFromFile("luaScripts/map.txt", lineNum)
+    local line = readLineFromFile(mapToLoad, lineNum)
 
     local pos = 1
     while true do
@@ -24,7 +27,6 @@ while line ~= nil do
             subStr = string.sub(line, pos, spacePos) 
             sub = string.match(subStr, "%S+")
             if sub ~= "0" then
-                print("elemnt found name: " .. sub .. "with pos Y: " .. currentX .. "and Y: " .. currentY)
                 local entity = scene.CreateEntity()
                 scene.SetComponent(entity, "drawable", "Overworld/" .. sub .. ".png" , currentX, currentY);
                 scene.SetComponent(entity, "collidable", true)
@@ -41,9 +43,3 @@ while line ~= nil do
     currentY = currentY + ofset;
 end
 
-print(string.sub(line, pos))
-
-print("-----------");
-
-
-print(line);
