@@ -9,20 +9,16 @@ key1 = -1
 key2 = -1
 once = false
 
-local entity = scene.CreateEntity()
---scene.SetComponent(entity, "player", true);
-scene.SetComponent(entity, "collidable", true)
-scene.SetComponent(entity, "drawable", "OverWorld/border.png");
-indicator = entity
 
 currentLevel = 1
 
 --dofile("luaScripts/fileReader.lua")
 --dofile("luaScripts/maploader.lua")
-dofile("luaScripts/newScreen.lua")
-addEmptyScreen("luaScripts/clean.txt")
+--dofile("luaScripts/newScreen.lua")
+--addEmptyScreen("luaScripts/clean.txt")
 
 playerEntity = scene.CreateEntity()
 scene.SetComponent(playerEntity, "player", true);
 scene.SetComponent(playerEntity, "collidable", true)
 scene.SetComponent(playerEntity, "drawable", "OverWorld/player.png", 250, 600);
+print(playerEntity)

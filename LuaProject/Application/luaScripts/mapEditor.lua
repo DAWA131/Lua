@@ -34,5 +34,3 @@ print("removing a tile")
 end
 
 scene.SetPosition(indicator, currentX, currentY)
-
---print("done")

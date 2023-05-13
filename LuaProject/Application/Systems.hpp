@@ -154,7 +154,7 @@ public:
 				lua_setglobal(L, "playerX");
 				if (luaL_dofile(L, "luaScripts/screenHandler.lua") != LUA_OK)
 				{
-					std::cout << "Error Lua file not found!\n";
+					std::cout << "Error Lua file not foundd!\n";
 				}
 			}
 		});

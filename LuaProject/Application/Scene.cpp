@@ -273,6 +273,9 @@ int Scene::lua_RemoveTile(lua_State* L)
 	//auto view = scene->m_registry.view<Drawable>(entt::exclude<Player>);
 	auto view = scene->m_registry.view<Drawable>(entt::exclude<Player>);
 	view.each([&](entt::entity entity, Drawable& sprite) {
+		
+			scene->m_registry.remove<Drawable>(entity);
+
 			scene->RemoveEntity((int)entity);
 	i++;
 		});
