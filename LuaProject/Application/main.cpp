@@ -130,7 +130,7 @@ int main()
 				lua_pushinteger(L, (int)((sf::Mouse::getPosition().y - 31) - window->getPosition().y));
 				lua_setglobal(L, "mouseY");
 
-				//luaL_dofile(L, "luaScripts/mapEditor.lua");
+				luaL_dofile(L, "luaScripts/mapEditor.lua");
 
 
 				std::cout << "X: " << (int)((sf::Mouse::getPosition().x-8) - window->getPosition().x)/48 << " Y: " << (int)((sf::Mouse::getPosition().y-31) - window->getPosition().y)/48 << "\n";

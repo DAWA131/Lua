@@ -17,6 +17,8 @@ indicator = entity
 
 --dofile("luaScripts/fileReader.lua")
 --dofile("luaScripts/maploader.lua")
+--dofile("luaScripts/newScreen.lua")
+--addEmptyScreen("luaScripts/map.txt")
 
 playerEntity = scene.CreateEntity()
 scene.SetComponent(playerEntity, "player", true);
