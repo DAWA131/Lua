@@ -79,30 +79,6 @@ void dumpStack(lua_State* L)
 
 int main()
 {
-	const int nrOne = 0;
-	const int nrTwo = 2;
-	const int nrThree = 3;
-	const int list[3] = { 0, 2, 3 };
-	std::vector<int> listt;
-	int v1=0;
-	for (size_t i = 0; i < 100; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			listt.push_back(list[j]);
-		}
-		std::cout << i << ":: ";
-		while (listt.size() != 0)
-		{
-			v1 = rand() % listt.size();
-			std::cout << listt[v1] << " : ";
-			listt.erase(listt.begin() + v1);
-		}
-		std::cout << std::endl;
-		
-	}
-	return 0;
-
 	entt::registry registry;
 	lua_State* L = luaL_newstate();
 	std::thread consoleThread(luaThreadLoop, L);
