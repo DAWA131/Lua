@@ -1,6 +1,4 @@
-print("start")
 local mapToLoad = "luaScripts/" .. currentLevel .. ".txt"
-print(mapToLoad)
 local line = readLineFromFile(mapToLoad, 1)
 if line == nil then print("ERROR: cant find map file") end
 local ofset = 48
@@ -13,7 +11,9 @@ local subStr;
 while line ~= nil do
     lineNum = lineNum + 1;
     local line = readLineFromFile(mapToLoad, lineNum)
-
+    if line == nil then
+        return
+    end
     local pos = 1
     while true do
         local spacePos, tabPos = string.find(line, "[%s\t]", pos)
@@ -26,9 +26,10 @@ while line ~= nil do
             if sub ~= "0" then
                 local entity = scene.CreateEntity()
                 if sub == "9" and gameMode ~= 2 then
+
                 else 
-                scene.SetComponent(entity, "drawable", "Overworld/" .. sub .. ".png" , currentX, currentY);
-                scene.SetComponent(entity, "collidable", true)
+                    scene.SetComponent(entity, "drawable", "Overworld/" .. sub .. ".png" , currentX, currentY);
+                    scene.SetComponent(entity, "collidable", true)
                 end
             end
             pos = spacePos + 1

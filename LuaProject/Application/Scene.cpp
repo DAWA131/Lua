@@ -269,7 +269,6 @@ int Scene::lua_RemoveTile(lua_State* L)
 	int y = lua_tointeger(L, 2);
 	x *= 48;
 	y *= 48;
-	int i = 0;
 	//auto view = scene->m_registry.view<Drawable>(entt::exclude<Player>);
 	auto view = scene->m_registry.view<Drawable>(entt::exclude<Player>);
 	view.each([&](entt::entity entity, Drawable& sprite) {
@@ -277,8 +276,6 @@ int Scene::lua_RemoveTile(lua_State* L)
 			scene->m_registry.remove<Drawable>(entity);
 
 			scene->RemoveEntity((int)entity);
-	i++;
 		});
-	std::cout << "number of tiles removed: " << i << "\n";
 	return 0;
 }

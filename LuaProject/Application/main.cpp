@@ -181,19 +181,4 @@ int main()
 
 	delete window;
 	return 0;
-
-
-	for (int i = 0; i < 100; i++){}
-
-	while (scene.GetEntityCount() != 0)
-	{
-		scene.UpdateSystems(1);	
-	}
-
-
-	while (true)
-	{
-	}
-
-	return 0;
 }
