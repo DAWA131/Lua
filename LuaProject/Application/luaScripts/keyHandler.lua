@@ -1,10 +1,6 @@
-
-
 if gameMode == 1 then
 	--Play game
 	dofile("luaScripts/keyInput.lua")
-
-
 end
 
 if gameMode == 2 then
@@ -22,5 +18,4 @@ if gameMode == 2 then
 		scene.RemoveTile(0, 0)
 		dofile("luaScripts/maploader.lua")
 	end
-
 end

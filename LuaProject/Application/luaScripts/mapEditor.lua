@@ -11,6 +11,10 @@ if key == 69 and currentLevel ~= 1 then
 local tileX = math.floor(mouseX / 48)
 local tileY = math.floor(mouseY / 48)
 
+if tileX == 0 or tileX == 15 then
+	return
+end
+
 tileY = tileY + 1;
 
 --print("LUA: X: " .. tileX .. " Y: " .. tileY)
