@@ -7,7 +7,7 @@
 --replaceChar("luaScripts/test.txt", 3, 3, "Y");
 
 --addEmptyScreen("luaScripts/test.txt")
-if key == 69 then
+if key == 69 and currentLevel ~= 1 then
 local tileX = math.floor(mouseX / 48)
 local tileY = math.floor(mouseY / 48)
 
