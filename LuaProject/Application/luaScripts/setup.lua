@@ -1,6 +1,6 @@
-
 A = 0
 D = 3
+esc = 36
 SPACE = 57
 force = 0.0
 direction = 0.0
@@ -8,9 +8,8 @@ keyDown = -1
 key1 = -1
 key2 = -1
 once = false
-
-
 currentLevel = 1
+gameMode = 1
 
 --dofile("luaScripts/fileReader.lua")
 --dofile("luaScripts/maploader.lua")

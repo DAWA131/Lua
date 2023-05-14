@@ -165,6 +165,7 @@
   <ItemGroup>
     <None Include="luaScripts\aftercheck.lua" />
     <None Include="luaScripts\fileReader.lua" />
+    <None Include="luaScripts\keyHandler.lua" />
     <None Include="luaScripts\keyInput.lua" />
     <None Include="luaScripts\mapEditor.lua" />
     <None Include="luaScripts\maploader.lua" />

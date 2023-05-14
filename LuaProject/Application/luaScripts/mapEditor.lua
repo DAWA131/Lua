@@ -7,7 +7,7 @@
 --replaceChar("luaScripts/test.txt", 3, 3, "Y");
 
 --addEmptyScreen("luaScripts/test.txt")
-
+if key == 69 then
 local tileX = math.floor(mouseX / 48)
 local tileY = math.floor(mouseY / 48)
 
@@ -16,7 +16,7 @@ tileY = tileY + 1;
 --print("LUA: X: " .. tileX .. " Y: " .. tileY)
 
 Istile = nil
-replaceChar("luaScripts/map.txt", tileX, tileY, "1")
+replaceChar("luaScripts/" .. currentLevel .. ".txt", tileX, tileY, "1")
 tileY = tileY - 1;
 
 	local currentX = tileX * 48;
@@ -33,4 +33,4 @@ print("removing a tile")
 	dofile("luaScripts/maploader.lua")
 end
 
-scene.SetPosition(indicator, currentX, currentY)
+end

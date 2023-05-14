@@ -140,7 +140,7 @@ class screenChangeSystem : public System
 	lua_State* L;
 	int WINDOWHEIGHT;
 public:
-	screenChangeSystem(lua_State* L, int screenHeight) : L(L), WINDOWHEIGHT(screenHeight){}
+	screenChangeSystem(lua_State* L, int screenHeight) : L(L), WINDOWHEIGHT(screenHeight) {}
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
 		auto View = registry.view<Drawable, Player>();
@@ -154,7 +154,6 @@ public:
 				lua_setglobal(L, "playerX");
 				if (luaL_dofile(L, "luaScripts/screenHandler.lua") != LUA_OK)
 				{
-					std::cout << "Error Lua file not foundd!\n";
 				}
 			}
 		});

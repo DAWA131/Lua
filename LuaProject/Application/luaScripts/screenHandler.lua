@@ -1,7 +1,5 @@
 
-
-
-if playerY > 850 then 
+if (playerY > 850 and gameMode == 1) or (key == 22 and gameMode == 2) then 
 	if currentLevel == 2 then
 		currentLevel = 1
 		scene.RemoveTile(0, 0)
@@ -10,9 +8,12 @@ if playerY > 850 then
 		dofile("luaScripts/maploader.lua")
 		print("player above window!")
 	end
+	if currentLevel == 1 then
+		gameMode = 2
+	end
 end
 
-if playerY < 0 then
+if (playerY < 0 and gameMode == 1) or (key == 18 and gameMode == 2) then
 	if currentLevel == 1 then
 		currentLevel = 2
 		scene.RemoveTile(0, 0)

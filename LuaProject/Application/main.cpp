@@ -101,6 +101,9 @@ int main()
 	luaL_openlibs(L);
 	std::cout << "Hello from c++" << "\n";
 	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(768, 816), "JumpKing ripoff");
+	sf::RenderWindow* window2 = new sf::RenderWindow(sf::VideoMode(100, 200), "tutorial");
+	window2->setPosition(sf::Vector2i((int)window->getPosition().x - window2->getSize().x, (int)window->getPosition().y));
+	window->setActive();
 
 	Scene scene;
 	Scene::lua_openscene(L, &scene);
@@ -135,9 +138,9 @@ int main()
 				consoleThread.join();
 			}
 
-			if (event.key.code == sf::Mouse::Left)
+			if (event.type == sf::Event::MouseButtonReleased)
 			{
-				if (event.type == sf::Event::MouseButtonReleased)
+				if (event.MouseButtonReleased == sf::Mouse::Left)
 				{
 					continue;
 				}
@@ -147,18 +150,22 @@ int main()
 				lua_pushinteger(L, (int)((sf::Mouse::getPosition().y - 31) - window->getPosition().y));
 				lua_setglobal(L, "mouseY");
 
-				//luaL_dofile(L, "luaScripts/mapEditor.lua");
+				lua_pushinteger(L, 69);
+				lua_setglobal(L, "key");
+
+				luaL_dofile(L, "luaScripts/keyHandler.lua");
 
 
 				std::cout << "X: " << (int)((sf::Mouse::getPosition().x-8) - window->getPosition().x)/48 << " Y: " << (int)((sf::Mouse::getPosition().y-31) - window->getPosition().y)/48 << "\n";
 			}
 			if (event.type == sf::Event::KeyPressed)
 			{
+				int test = event.key.code;
 				lua_pushinteger(L, event.key.code);
 				lua_setglobal(L, "key");
 				lua_pushboolean(L, true);
 				lua_setglobal(L, "moving");
-				luaL_dofile(L, "luaScripts/keyInput.lua");
+				luaL_dofile(L, "luaScripts/keyHandler.lua");
 			}
 			else if (event.type == sf::Event::KeyReleased)
 			{
@@ -166,9 +173,8 @@ int main()
 				lua_setglobal(L, "key");
 				lua_pushboolean(L, false);
 				lua_setglobal(L, "moving");
-				luaL_dofile(L, "luaScripts/keyInput.lua");
+				luaL_dofile(L, "luaScripts/keyHandler.lua");
 			}
-			dumpError(L);
 		}
 		scene.UpdateSystems(1);
 		dumpError(L);
