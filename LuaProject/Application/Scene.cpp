@@ -226,6 +226,11 @@ int Scene::lua_SetComponent(lua_State* L)
 		float ySpeed = lua_tonumber(L, 4);
 		scene->SetComponent<Jumping>(entity, xSpeed, -ySpeed);
 	}
+	else if (type == "win")
+	{
+		bool coll = lua_toboolean(L, 3);
+		scene->SetComponent<Win>(entity, coll);
+	}
 	return 0;
 }
 

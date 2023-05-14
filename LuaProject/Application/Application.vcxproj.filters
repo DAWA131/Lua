@@ -39,6 +39,7 @@
     <None Include="luaScripts\playerCollide.lua" />
     <None Include="luaScripts\screenHandler.lua" />
     <None Include="luaScripts\keyHandler.lua" />
+    <None Include="luaScripts\winCon.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.hpp">

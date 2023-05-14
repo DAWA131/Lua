@@ -161,3 +161,40 @@ public:
 		return false;
 	}
 };
+
+class winSystem : public System
+{
+	lua_State* L;
+public:
+	winSystem(lua_State* L) : L(L) {}
+
+	bool OnUpdate(entt::registry& registry, float delta) final
+	{
+		auto view = registry.view<Drawable, Win>();
+		view.each([&](Drawable& platforms, const Win& collidable){
+
+			auto playerView = registry.view<Drawable, Player>();
+			playerView.each([&](entt::entity entity, Drawable& sprite, const Player& player){
+
+				if (sprite.sprite.getGlobalBounds().intersects(platforms.sprite.getGlobalBounds()))
+				{
+					lua_pushnumber(L, sprite.sprite.getPosition().x);
+					lua_setglobal(L, "playerX");
+					lua_pushnumber(L, sprite.sprite.getPosition().y);
+					lua_setglobal(L, "playerY");
+
+					lua_pushnumber(L, platforms.sprite.getPosition().x);
+					lua_setglobal(L, "winX");
+					lua_pushnumber(L, platforms.sprite.getPosition().y);
+					lua_setglobal(L, "winY");
+
+					if (luaL_dofile(L, "luaScripts/winCon.lua") != LUA_OK)
+					{
+
+					}
+				}
+			});
+		});
+		return false;
+	}
+};

@@ -47,3 +47,8 @@ public:
 		sprite.setPosition(x, y);
 	}
 };
+
+struct Win
+{
+	bool noVoidHere;
+};

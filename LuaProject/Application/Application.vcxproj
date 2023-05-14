@@ -173,6 +173,7 @@
     <None Include="luaScripts\replaceChar.lua" />
     <None Include="luaScripts\playerCollide.lua" />
     <None Include="luaScripts\screenHandler.lua" />
+    <None Include="luaScripts\winCon.lua" />
     <None Include="monster.lua" />
     <None Include="luaScripts\sceneDemo.lua" />
     <None Include="luaScripts\setup.lua" />

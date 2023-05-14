@@ -111,6 +111,7 @@ int main()
 	scene.CreateSystem<CollisionSystem>(L, false);
 	scene.CreateSystem<Draw>(window);
 	scene.CreateSystem<screenChangeSystem>(L, 816);
+	scene.CreateSystem<winSystem>(L);
 
 	luaL_dofile(L, "luaScripts/setup.lua");
 	luaL_dofile(L, "luaScripts/fileReader.lua");
