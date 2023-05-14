@@ -90,7 +90,7 @@ int main()
 	Scene::lua_openscene(L, &scene);
 	scene.CreateSystem<MovementSystem>();
 	scene.CreateSystem<JumpSystem>();
-	//scene.CreateSystem<EdgeSystem>();
+	scene.CreateSystem<EdgeSystem>(L);
 	scene.CreateSystem<CollisionSystem>(L, false);
 	scene.CreateSystem<Draw>(window);
 
@@ -130,10 +130,10 @@ int main()
 				lua_pushinteger(L, (int)((sf::Mouse::getPosition().y - 31) - window->getPosition().y));
 				lua_setglobal(L, "mouseY");
 
-				luaL_dofile(L, "luaScripts/mapEditor.lua");
+				//luaL_dofile(L, "luaScripts/mapEditor.lua");
 
 
-				std::cout << "X: " << (int)((sf::Mouse::getPosition().x-8) - window->getPosition().x)/48 << " Y: " << (int)((sf::Mouse::getPosition().y-31) - window->getPosition().y)/48 << "\n";
+				//std::cout << "X: " << (int)((sf::Mouse::getPosition().x-8) - window->getPosition().x)/48 << " Y: " << (int)((sf::Mouse::getPosition().y-31) - window->getPosition().y)/48 << "\n";
 			}
 			if (event.type == sf::Event::KeyPressed)
 			{

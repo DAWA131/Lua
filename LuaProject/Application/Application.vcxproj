@@ -171,6 +171,7 @@
     <None Include="luaScripts\newScreen.lua" />
     <None Include="luaScripts\replaceChar.lua" />
     <None Include="luaScripts\playerCollide.lua" />
+    <None Include="luaScripts\WindowJump.lua" />
     <None Include="monster.lua" />
     <None Include="luaScripts\sceneDemo.lua" />
     <None Include="luaScripts\setup.lua" />

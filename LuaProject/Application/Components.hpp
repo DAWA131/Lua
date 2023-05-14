@@ -18,6 +18,11 @@ struct Moving
 	bool setPos;
 };
 
+struct Stopping
+{
+	bool NonVoidStruct;
+};
+
 struct Jumping
 {
 	float xSpeed;

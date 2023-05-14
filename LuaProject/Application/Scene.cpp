@@ -226,6 +226,10 @@ int Scene::lua_SetComponent(lua_State* L)
 		float ySpeed = lua_tonumber(L, 4);
 		scene->SetComponent<Jumping>(entity, xSpeed, -ySpeed);
 	}
+	else if (type == "stop")
+	{
+		scene->SetComponent<Stopping>(entity);
+	}
 	return 0;
 }
 
@@ -242,6 +246,8 @@ int Scene::lua_RemoveComponent(lua_State* L)
 		scene->RemoveComponent<Moving>(entity);
 	else if (type == "jump")
 		scene->RemoveComponent<Jumping>(entity);
+	else if (type == "stop")
+		scene->RemoveComponent<Stopping>(entity);
 	return 0;
 }
 

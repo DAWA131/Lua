@@ -27,7 +27,9 @@ while line ~= nil do
                 print("elemnt found name: " .. sub .. "with pos Y: " .. currentX .. "and Y: " .. currentY)
                 local entity = scene.CreateEntity()
                 scene.SetComponent(entity, "drawable", "Overworld/" .. sub .. ".png" , currentX, currentY);
-                scene.SetComponent(entity, "collidable", true)
+                if sub ~= "8"  then
+                    scene.SetComponent(entity, "collidable", true)
+                end
             end
             pos = spacePos + 1
         end

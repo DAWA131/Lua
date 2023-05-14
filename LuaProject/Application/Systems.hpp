@@ -71,13 +71,20 @@ class MovementSystem : public System
 public:
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
-		auto view = registry.view<Drawable, Moving, Player>(entt::exclude<Jumping>);
-		view.each([](Drawable& shape, const Moving& moving, const Player& player)
+		auto view = registry.view<Drawable, Moving, Player>(entt::exclude<Jumping, Stopping>);
+		view.each([](Drawable& shape,  Moving& moving, const Player& player)
 			{
 				if (moving.setPos)
+				{
 					shape.sprite.setPosition(moving.Xspeed, moving.Yspeed);
+					moving.setPos = false;
+					moving.Xspeed = 0.f;
+					moving.Yspeed = 0.f;
+				}
 				else
 					shape.sprite.move(moving.Xspeed, moving.Yspeed);
+				
+				
 			}
 		);
 		return false;
@@ -92,11 +99,7 @@ public:
 		auto view = registry.view<Drawable, Jumping, Player>();
 		view.each([&](entt::entity entity, Drawable& shape, Jumping& jump, const Player& player)
 			{
-				if (jump.ySpeed != 0.f)
-				{
-					jump.ySpeed = jump.ySpeed + 0.05;
-					shape.sprite.move(jump.xSpeed, jump.ySpeed);
-				}
+				shape.sprite.move(jump.xSpeed, jump.ySpeed);
 			}
 		);
 		return false;
@@ -105,19 +108,26 @@ public:
 
 class EdgeSystem : public System
 {
+	lua_State* L;
+
 public:
+	EdgeSystem(lua_State* L) : L(L) {}
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
 		auto view = registry.view<Drawable, Player>();
-		view.each([](Drawable& shape, const Player& player)
+		view.each([&](Drawable& shape, const Player& player)
 			{
-				if (shape.sprite.getPosition().x < 0)
-				shape.sprite.setPosition(0.f, shape.sprite.getPosition().y);
-				else if (shape.sprite.getPosition().x > 750)
-					shape.sprite.setPosition(750, shape.sprite.getPosition().y);
-				
-				if (shape.sprite.getPosition().y > 800)
-					shape.sprite.setPosition(shape.sprite.getPosition().x, 800);
+				if ((shape.sprite.getPosition().x < 0) ||
+					(shape.sprite.getPosition().x > 768 - shape.sprite.getLocalBounds().width))
+				{
+					lua_pushnumber(L, shape.sprite.getPosition().x);
+					lua_setglobal(L, "playerX");
+					lua_pushnumber(L, shape.sprite.getPosition().y);
+					lua_setglobal(L, "playerY");
+
+					if (luaL_dofile(L, "luaScripts/WindowJump.lua") != LUA_OK)
+						std::cout << "Error\n";
+				}
 			}
 		);
 
