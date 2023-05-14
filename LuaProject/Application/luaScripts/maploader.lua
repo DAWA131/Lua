@@ -25,8 +25,11 @@ while line ~= nil do
             sub = string.match(subStr, "%S+")
             if sub ~= "0" then
                 local entity = scene.CreateEntity()
+                if sub == "9" and gameMode ~= 2 then
+                else 
                 scene.SetComponent(entity, "drawable", "Overworld/" .. sub .. ".png" , currentX, currentY);
                 scene.SetComponent(entity, "collidable", true)
+                end
             end
             pos = spacePos + 1
         end

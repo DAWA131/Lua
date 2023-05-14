@@ -13,6 +13,8 @@ if (playerY > 850 and gameMode == 1) or (key == 18 and gameMode == 2) then
 	end
 	if currentLevel == 1 then
 		gameMode = 2
+		scene.RemoveTile(0, 0)
+		dofile("luaScripts/maploader.lua")
 	end
 end
 

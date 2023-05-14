@@ -101,8 +101,6 @@ int main()
 	luaL_openlibs(L);
 	std::cout << "Hello from c++" << "\n";
 	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(768, 816), "JumpKing ripoff");
-	sf::RenderWindow* window2 = new sf::RenderWindow(sf::VideoMode(100, 200), "tutorial");
-	window2->setPosition(sf::Vector2i((int)window->getPosition().x - window2->getSize().x, (int)window->getPosition().y));
 	window->setActive();
 
 	Scene scene;
