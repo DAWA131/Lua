@@ -88,11 +88,10 @@ int main()
 
 	Scene scene;
 	Scene::lua_openscene(L, &scene);
-	scene.CreateSystem<MovementSystem>();
-	scene.CreateSystem<JumpSystem>();
-	scene.CreateSystem<EdgeSystem>(L);
-	scene.CreateSystem<CollisionSystem>(L, false);
 	scene.CreateSystem<Draw>(window);
+	scene.CreateSystem<MovementSystem>();
+	scene.CreateSystem<JumpingSystem>();
+	scene.CreateSystem<CollisionSystem>(L, false);
 
 	luaL_dofile(L, "luaScripts/setup.lua");
 	luaL_dofile(L, "luaScripts/fileReader.lua");

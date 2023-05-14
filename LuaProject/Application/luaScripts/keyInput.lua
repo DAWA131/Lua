@@ -30,10 +30,10 @@ end
 
 --- Walking
 if key == D and key2 == -1 then
-    scene.SetComponent(playerEntity, "rightMove", speed, 0.0, false)
+    scene.SetComponent(playerEntity, "move", speed, 0.0, false)
 end
 if key == A and key2 == -1 then
-    scene.SetComponent(playerEntity, "leftMove", speed, 0.0, false)
+    scene.SetComponent(playerEntity, "move", -speed, 0.0, false)
 end
 
 -- Jumping
@@ -50,9 +50,8 @@ if moving == false then
     if key == SPACE then
         if scene.HasComponent(playerEntity, "jump") == false then
             jumpHeight = force
-            force = 1.5
             scene.SetComponent(playerEntity, "jump", direction, jumpHeight)
-            scene.RemoveComponent(playerEntity, "stop")
+            force = 0.5
             once = false
         end
     else

@@ -13,20 +13,20 @@ struct Poison
 
 struct Moving
 {
-	float Xspeed;
-	float Yspeed;
+	float xSpeed;
+	float ySpeed;
 	bool setPos;
+};
+
+struct Jumping
+{
+	float direction;
+	float height;
 };
 
 struct Stopping
 {
 	bool NonVoidStruct;
-};
-
-struct Jumping
-{
-	float xSpeed;
-	float ySpeed;
 };
 
 struct Player

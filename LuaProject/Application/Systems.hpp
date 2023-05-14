@@ -71,66 +71,31 @@ class MovementSystem : public System
 public:
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
-		auto view = registry.view<Drawable, Moving, Player>(entt::exclude<Jumping, Stopping>);
-		view.each([](Drawable& shape,  Moving& moving, const Player& player)
+		auto view = registry.view<Drawable, Moving, Player>(entt::exclude<Stopping>);
+		view.each([](Drawable& shape, Moving& moving, const Player& player)
 			{
 				if (moving.setPos)
-				{
-					shape.sprite.setPosition(moving.Xspeed, moving.Yspeed);
-					moving.setPos = false;
-					moving.Xspeed = 0.f;
-					moving.Yspeed = 0.f;
-				}
+					shape.sprite.setPosition(moving.xSpeed, moving.ySpeed);
 				else
-					shape.sprite.move(moving.Xspeed, moving.Yspeed);
-				
-				
+					shape.sprite.move(moving.xSpeed, moving.ySpeed);
 			}
 		);
 		return false;
 	}
 };
 
-class JumpSystem : public System
+class JumpingSystem : public System
 {
 public:
-	bool OnUpdate(entt::registry& registry, float delta) final
+	bool OnUpdate(entt::registry& registry, float delta)
+		final
 	{
 		auto view = registry.view<Drawable, Jumping, Player>();
-		view.each([&](entt::entity entity, Drawable& shape, Jumping& jump, const Player& player)
+		view.each([](Drawable& shape, const Jumping& jump, const Player& player)
 			{
-				shape.sprite.move(jump.xSpeed, jump.ySpeed);
+				shape.sprite.move(jump.direction, jump.height);
 			}
 		);
-		return false;
-	}
-};
-
-class EdgeSystem : public System
-{
-	lua_State* L;
-
-public:
-	EdgeSystem(lua_State* L) : L(L) {}
-	bool OnUpdate(entt::registry& registry, float delta) final
-	{
-		auto view = registry.view<Drawable, Player>();
-		view.each([&](Drawable& shape, const Player& player)
-			{
-				if ((shape.sprite.getPosition().x < 0) ||
-					(shape.sprite.getPosition().x > 768 - shape.sprite.getLocalBounds().width))
-				{
-					lua_pushnumber(L, shape.sprite.getPosition().x);
-					lua_setglobal(L, "playerX");
-					lua_pushnumber(L, shape.sprite.getPosition().y);
-					lua_setglobal(L, "playerY");
-
-					if (luaL_dofile(L, "luaScripts/WindowJump.lua") != LUA_OK)
-						std::cout << "Error\n";
-				}
-			}
-		);
-
 		return false;
 	}
 };
@@ -147,7 +112,7 @@ public:
 		falling = true;
 		lua_pushboolean(L, falling);
 		lua_setglobal(L, "falling");
-		
+
 		auto view = registry.view<Drawable, Collidable>();
 		view.each([&](Drawable& platforms, const Collidable& collidable)
 			{

@@ -129,6 +129,8 @@ int Scene::lua_HasComponent(lua_State* L)
 		hasComponent = scene->HasComponents<Poison>(entity);
 	else if (type == "jump")
 		hasComponent = scene->HasComponents<Jumping>(entity);
+	else if (type == "move")
+		hasComponent = scene->HasComponents<Moving>(entity);
 
 	lua_pushboolean(L, hasComponent);
 	return 1;
@@ -199,21 +201,7 @@ int Scene::lua_SetComponent(lua_State* L)
 		bool coll = lua_toboolean(L, 3);
 		scene->SetComponent<Collidable>(entity, coll);
 	}
-	else if (type == "rightMove")
-	{
-		float moveX = lua_tonumber(L, 3);
-		float moveY = lua_tonumber(L, 4);
-		bool setPos = lua_toboolean(L, 5);
-		scene->SetComponent<Moving>(entity, moveX, moveY, setPos);
-	}
-	else if (type == "leftMove")
-	{
-		float moveX = lua_tonumber(L, 3);
-		float moveY = lua_tonumber(L, 4);
-		bool setPos = lua_toboolean(L, 5);
-		scene->SetComponent<Moving>(entity, -moveX, moveY, setPos);
-	}
-	else if (type == "upMove")
+	else if (type == "move")
 	{
 		float moveX = lua_tonumber(L, 3);
 		float moveY = lua_tonumber(L, 4);
@@ -222,9 +210,9 @@ int Scene::lua_SetComponent(lua_State* L)
 	}
 	else if (type == "jump")
 	{
-		float xSpeed = lua_tonumber(L, 3);
-		float ySpeed = lua_tonumber(L, 4);
-		scene->SetComponent<Jumping>(entity, xSpeed, -ySpeed);
+		float direction = lua_tonumber(L, 3);
+		float height = lua_tonumber(L, 4);
+		scene->SetComponent<Jumping>(entity, direction, -height);
 	}
 	else if (type == "stop")
 	{
@@ -244,10 +232,10 @@ int Scene::lua_RemoveComponent(lua_State* L)
 		scene->RemoveComponent<Poison>(entity);
 	else if (type == "move")
 		scene->RemoveComponent<Moving>(entity);
-	else if (type == "jump")
-		scene->RemoveComponent<Jumping>(entity);
 	else if (type == "stop")
 		scene->RemoveComponent<Stopping>(entity);
+	else if (type == "jump")
+		scene->RemoveComponent<Jumping>(entity);
 	return 0;
 }
 
