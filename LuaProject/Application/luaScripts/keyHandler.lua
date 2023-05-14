@@ -15,9 +15,12 @@ if gameMode == 2 then
 		currentLevel = 1
 		gameMode = 1
 
-		--input spwan pos
 		scene.SetPosition(playerEntity, 250, 580)
 		scene.RemoveComponent(playerEntity, "jump")
+
+		scene.RemoveTile(0, 0)
+		dofile("luaScripts/maploader.lua")
+		--input spwan pos
 	end
 
 end
