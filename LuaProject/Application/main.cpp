@@ -24,6 +24,22 @@
 //#pragma comment(lib, "sfml-graphics.lib")
 //#endif
 
+#include <chrono>
+
+void limitFPS(int desiredFPS) {
+	static std::chrono::steady_clock::time_point prevTime = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+	std::chrono::duration<double, std::milli> elapsedTime = currentTime - prevTime;
+	std::chrono::duration<double, std::milli> frameTime(1000.0 / desiredFPS);
+
+	if (elapsedTime < frameTime) 
+	{
+		std::this_thread::sleep_for(frameTime - elapsedTime);
+	}
+
+	prevTime = std::chrono::steady_clock::now();
+}
+
 void dumpError(lua_State* L)
 {
 	if (lua_gettop(L) && lua_isstring(L, -1))
@@ -85,6 +101,7 @@ int main()
 	luaL_openlibs(L);
 	std::cout << "Hello from c++" << "\n";
 	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(768, 816), "JumpKing ripoff");
+	window->setActive();
 
 	Scene scene;
 	Scene::lua_openscene(L, &scene);
@@ -92,6 +109,8 @@ int main()
 	scene.CreateSystem<JumpSystem>();
 	scene.CreateSystem<CollisionSystem>(L, false);
 	scene.CreateSystem<Draw>(window);
+	scene.CreateSystem<screenChangeSystem>(L, 816);
+	scene.CreateSystem<winSystem>(L);
 
 	luaL_dofile(L, "luaScripts/setup.lua");
 	luaL_dofile(L, "luaScripts/fileReader.lua");
@@ -117,9 +136,9 @@ int main()
 				consoleThread.join();
 			}
 
-			if (event.key.code == sf::Mouse::Left)
+			if (event.type == sf::Event::MouseButtonReleased)
 			{
-				if (event.type == sf::Event::MouseButtonReleased)
+				if (event.MouseButtonReleased == sf::Mouse::Left)
 				{
 					continue;
 				}
@@ -128,16 +147,20 @@ int main()
 
 				lua_pushinteger(L, (int)((sf::Mouse::getPosition().y - 31) - window->getPosition().y));
 				lua_setglobal(L, "mouseY");
-
-				//luaL_dofile(L, "luaScripts/mapEditor.lua");
+				
+				lua_pushinteger(L, 69);
+				lua_setglobal(L, "key");
+				luaL_dofile(L, "luaScripts/keyHandler.lua");
+				std::cout << "X: " << (int)((sf::Mouse::getPosition().x-8) - window->getPosition().x)/48 << " Y: " << (int)((sf::Mouse::getPosition().y-31) - window->getPosition().y)/48 << "\n";
 			}
 			if (event.type == sf::Event::KeyPressed)
 			{
+				int test = event.key.code;
 				lua_pushinteger(L, event.key.code);
 				lua_setglobal(L, "key");
 				lua_pushboolean(L, true);
 				lua_setglobal(L, "moving");
-				luaL_dofile(L, "luaScripts/keyInput.lua");
+				luaL_dofile(L, "luaScripts/keyHandler.lua");
 			}
 			else if (event.type == sf::Event::KeyReleased)
 			{
@@ -145,28 +168,14 @@ int main()
 				lua_setglobal(L, "key");
 				lua_pushboolean(L, false);
 				lua_setglobal(L, "moving");
-				luaL_dofile(L, "luaScripts/keyInput.lua");
+				luaL_dofile(L, "luaScripts/keyHandler.lua");
 			}
-			dumpError(L);
 		}
 		scene.UpdateSystems(1);
+		dumpError(L);
+		//limitFPS(60);
 	}
 
 	delete window;
-	return 0;
-
-
-	for (int i = 0; i < 100; i++){}
-
-	while (scene.GetEntityCount() != 0)
-	{
-		scene.UpdateSystems(1);	
-	}
-
-
-	while (true)
-	{
-	}
-
 	return 0;
 }

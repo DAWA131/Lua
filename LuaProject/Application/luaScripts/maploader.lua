@@ -1,8 +1,6 @@
---local fileReader = require("readLineFromFile")
-
-print("start")
-local line = readLineFromFile("luaScripts/map.txt", 1)
-if line == nil then print("ERROR: cant find file") end
+local mapToLoad = "luaScripts/" .. currentLevel .. ".txt"
+local line = readLineFromFile(mapToLoad, 1)
+if line == nil then print("ERROR: cant find map file") end
 local ofset = 48
 local lineNum = 1;
 
@@ -12,8 +10,10 @@ local subStr;
 
 while line ~= nil do
     lineNum = lineNum + 1;
-    local line = readLineFromFile("luaScripts/map.txt", lineNum)
-
+    local line = readLineFromFile(mapToLoad, lineNum)
+    if line == nil then
+        return
+    end
     local pos = 1
     while true do
         local spacePos, tabPos = string.find(line, "[%s\t]", pos)
@@ -24,18 +24,19 @@ while line ~= nil do
             subStr = string.sub(line, pos, spacePos) 
             sub = string.match(subStr, "%S+")
             if sub ~= "0" then
-                print("elemnt found name: " .. sub .. "with pos Y: " .. currentX .. "and Y: " .. currentY)
-                local entity = scene.CreateEntity()
-                scene.SetComponent(entity, "drawable", "Overworld/" .. sub .. ".png" , currentX, currentY);
-                if sub ~= "8"  then
-                    scene.SetComponent(entity, "collidable", true)
+                if sub == "a" and gameMode ~= 2 then
+                else 
+                    local entity = scene.CreateEntity()
+                    scene.SetComponent(entity, "drawable", "Overworld/" .. sub .. ".png" , currentX, currentY);
+                    if sub ~= "9" then 
+                        scene.SetComponent(entity, "collidable", true)
+                    end
+                    if sub == "9" then
+                        scene.SetComponent(entity, "win", true)
+                    end
                 end
             end
             pos = spacePos + 1
-        end
-        if tabPos and tabPos ~= spacePos then
-            print("Tab position:", tabPos)
-            pos = tabPos + 1
         end
         currentX = currentX + ofset;
     end
@@ -43,9 +44,3 @@ while line ~= nil do
     currentY = currentY + ofset;
 end
 
-print(string.sub(line, pos))
-
-print("-----------");
-
-
-print(line);

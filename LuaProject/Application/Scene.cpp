@@ -215,6 +215,10 @@ int Scene::lua_SetComponent(lua_State* L)
 	else if (type == "stop")
 	{
 		scene->SetComponent<Stopping>(entity);
+	else if (type == "win")
+	{
+		bool coll = lua_toboolean(L, 3);
+		scene->SetComponent<Win>(entity, coll);
 	}
 	return 0;
 }
@@ -264,6 +268,9 @@ int Scene::lua_RemoveTile(lua_State* L)
 	//auto view = scene->m_registry.view<Drawable>(entt::exclude<Player>);
 	auto view = scene->m_registry.view<Drawable>(entt::exclude<Player>);
 	view.each([&](entt::entity entity, Drawable& sprite) {
+		
+			scene->m_registry.remove<Drawable>(entity);
+
 			scene->RemoveEntity((int)entity);
 		});
 	return 0;
