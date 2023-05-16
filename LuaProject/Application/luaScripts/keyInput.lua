@@ -15,25 +15,27 @@ end
 
 -- Checking double movement
 if (key1 == SPACE and key2 == D) or (key1 == D and key2 == SPACE) then
-    force = force + 1.0
-    if force >= 2.5 then
-        force = 2.5
+   force = force + 0.3;
+    if force > 3 then
+        force = 3
     end
-    direction = force * 0.5
+    direction = force
 elseif (key1 == SPACE and key2 == A) or (key1 == A and key2 == SPACE) then
-    force = force + 1.0;
-    if force >= 2.5 then
-        force = 2.5
+    force = force + 0.3;
+    if force > 3 then
+        force = 3
     end
-    direction = -force * 0.5
+    direction = -force
 end
 
 --- Walking
 if key == D and key2 == -1 then
-    scene.SetComponent(playerEntity, "rightMove", speed, 0.0, false)
+    scene.SetComponent(playerEntity, "move", speed, 0.0, false)
+    direction = force
 end
 if key == A and key2 == -1 then
-    scene.SetComponent(playerEntity, "leftMove", speed, 0.0, false)
+    scene.SetComponent(playerEntity, "move", -speed, 0.0, false)
+    direction = -force
 end
 
 -- Jumping
@@ -50,12 +52,15 @@ if moving == false then
     if key == SPACE then
         if scene.HasComponent(playerEntity, "jump") == false then
             jumpHeight = force
-            force = 1.5
+            force = 1.0
             scene.SetComponent(playerEntity, "jump", direction, jumpHeight)
             scene.RemoveComponent(playerEntity, "stop")
             once = false
         end
     else
         scene.RemoveComponent(playerEntity, "move")
+        if scene.HasComponent(playerEntity, "jump") == false then
+            direction = 0.0
+        end
     end
 end

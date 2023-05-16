@@ -1,29 +1,35 @@
 local width = 48.0
 local height = 48.0
+local pHeight = 50.0
 
 -- Y Collision
-if platformY < playerY and falling == true then
-	scene.SetPosition(playerEntity, playerX, platformY + (height - 1.0))
+-- Jumping up and hitting ceiling
+if platformY < playerY then
+	jumpHeight = jumpHeight - 2
 end
 
-if platformY > playerY then
+-- Standing on the ground
+if platformY + 20 > playerY and (playerX + 30) > platformX and platformY > playerY then
 	falling = false
 	if once == false then
 		once = true
 		scene.RemoveComponent(playerEntity, "jump")
-		scene.SetComponent(playerEntity, "upMove", playerX, platformY - (height - 1.0), true)
+		scene.SetComponent(playerEntity, "move", playerX, platformY - (pHeight - 1.0), true)
+		if (platformX + 40) > playerX then
+			direction = 0.0
+		end
 	end
 end
 
 -- X Collision
-if playerX < platformX and (playerX + width) > platformX and (playerY + height) > (platformY + height) then
-	scene.SetComponent(playerEntity, "rightMove", platformX - width, playerY, true)
+-- Right side Collision
+if playerX < platformX and (playerX + width) > platformX and playerY > platformY then
+	direction = -direction
+	scene.SetComponent(playerEntity, "move", platformX - (width + 1), playerY, true)
 end
 
+-- Left side Collision
 if playerX > platformX and playerX < (platformX + width) and (playerY + height) > (platformY + height) then
-	scene.SetComponent(playerEntity, "rightMove", platformX + width, playerY, true)
+	direction = -direction
+	scene.SetComponent(playerEntity, "move", platformX + (width + 1), playerY, true)
 end
-
---if playerX < platformX
-	--print("TOUOCH")
---end

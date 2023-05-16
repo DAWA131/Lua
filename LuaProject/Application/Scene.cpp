@@ -199,21 +199,7 @@ int Scene::lua_SetComponent(lua_State* L)
 		bool coll = lua_toboolean(L, 3);
 		scene->SetComponent<Collidable>(entity, coll);
 	}
-	else if (type == "rightMove")
-	{
-		float moveX = lua_tonumber(L, 3);
-		float moveY = lua_tonumber(L, 4);
-		bool setPos = lua_toboolean(L, 5);
-		scene->SetComponent<Moving>(entity, moveX, moveY, setPos);
-	}
-	else if (type == "leftMove")
-	{
-		float moveX = lua_tonumber(L, 3);
-		float moveY = lua_tonumber(L, 4);
-		bool setPos = lua_toboolean(L, 5);
-		scene->SetComponent<Moving>(entity, -moveX, moveY, setPos);
-	}
-	else if (type == "upMove")
+	else if (type == "move")
 	{
 		float moveX = lua_tonumber(L, 3);
 		float moveY = lua_tonumber(L, 4);

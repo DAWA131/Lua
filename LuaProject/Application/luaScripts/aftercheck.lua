@@ -1,10 +1,12 @@
+-- Checking if there is ground under the player
 if falling == true then
 	if scene.HasComponent(playerEntity, "jump") == false then
-		scene.SetComponent(playerEntity, "jump", 0.0, -2.0)
+		scene.SetComponent(playerEntity, "jump", direction, -2.0)
 		once = false
 	end
 end
 
+-- Making sure the player comes down from a jump
 if scene.HasComponent(playerEntity, "jump") == true then
 		jumpHeight = jumpHeight - 0.03
 		scene.SetComponent(playerEntity, "jump", direction, jumpHeight)

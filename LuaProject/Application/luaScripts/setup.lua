@@ -1,7 +1,7 @@
 A = 0
 D = 3
 SPACE = 57
-force = 1.5
+force = 1.0
 direction = 0.0
 keyDown = -1
 key1 = -1
