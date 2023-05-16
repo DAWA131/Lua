@@ -106,35 +106,6 @@ public:
 	}
 };
 
-class EdgeSystem : public System
-{
-	lua_State* L;
-
-public:
-	EdgeSystem(lua_State* L) : L(L) {}
-	bool OnUpdate(entt::registry& registry, float delta) final
-	{
-		auto view = registry.view<Drawable, Player>();
-		view.each([&](Drawable& shape, const Player& player)
-			{
-				if ((shape.sprite.getPosition().x < 0) ||
-					(shape.sprite.getPosition().x > 768 - shape.sprite.getLocalBounds().width))
-				{
-					lua_pushnumber(L, shape.sprite.getPosition().x);
-					lua_setglobal(L, "playerX");
-					lua_pushnumber(L, shape.sprite.getPosition().y);
-					lua_setglobal(L, "playerY");
-
-					if (luaL_dofile(L, "luaScripts/WindowJump.lua") != LUA_OK)
-						std::cout << "Error\n";
-				}
-			}
-		);
-
-		return false;
-	}
-};
-
 class CollisionSystem : public System
 {
 	lua_State* L;

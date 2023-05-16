@@ -90,7 +90,6 @@ int main()
 	Scene::lua_openscene(L, &scene);
 	scene.CreateSystem<MovementSystem>();
 	scene.CreateSystem<JumpSystem>();
-	scene.CreateSystem<EdgeSystem>(L);
 	scene.CreateSystem<CollisionSystem>(L, false);
 	scene.CreateSystem<Draw>(window);
 

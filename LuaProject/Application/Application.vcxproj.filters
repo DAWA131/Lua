@@ -37,7 +37,6 @@
     <None Include="luaScripts\newScreen.lua" />
     <None Include="luaScripts\aftercheck.lua" />
     <None Include="luaScripts\playerCollide.lua" />
-    <None Include="luaScripts\WindowJump.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.hpp">
