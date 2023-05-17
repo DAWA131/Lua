@@ -20,7 +20,7 @@ if (playerY > 850 and gameMode == 1) or (key == 18 and gameMode == 2 and onceMor
 	end
 end
 
-if (playerY < 0 and gameMode == 1) or (key == 22 and gameMode == 2 and onceMore == true) then
+if (playerY < 40 and gameMode == 1) or (key == 22 and gameMode == 2 and onceMore == true) then
 	onceMore = false
 	moving = true
 	currentLevel = currentLevel + 1

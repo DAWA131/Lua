@@ -109,7 +109,7 @@ int main()
 	scene.CreateSystem<JumpSystem>();
 	scene.CreateSystem<CollisionSystem>(L, false);
 	scene.CreateSystem<Draw>(window);
-	scene.CreateSystem<screenChangeSystem>(L, 816);
+	scene.CreateSystem<screenChangeSystem>(L, 816, 768);
 	scene.CreateSystem<winSystem>(L);
 
 	luaL_dofile(L, "luaScripts/setup.lua");

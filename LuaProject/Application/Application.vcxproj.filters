@@ -40,6 +40,7 @@
     <None Include="luaScripts\screenHandler.lua" />
     <None Include="luaScripts\keyHandler.lua" />
     <None Include="luaScripts\winCon.lua" />
+    <None Include="luaScripts\windowBounds.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.hpp">

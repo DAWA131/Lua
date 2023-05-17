@@ -29,8 +29,6 @@ public:
 				}
 				else
 					shape.sprite.move(moving.Xspeed, moving.Yspeed);
-				
-				
 			}
 		);
 		return false;
@@ -120,8 +118,9 @@ class screenChangeSystem : public System
 {
 	lua_State* L;
 	int WINDOWHEIGHT;
+	int WINDOWWIDTH;
 public:
-	screenChangeSystem(lua_State* L, int screenHeight) : L(L), WINDOWHEIGHT(screenHeight) {}
+	screenChangeSystem(lua_State* L, int screenHeight, int screenWidth) : L(L), WINDOWHEIGHT(screenHeight), WINDOWWIDTH(screenWidth) {}
 	bool OnUpdate(entt::registry& registry, float delta) final
 	{
 		auto View = registry.view<Drawable, Player>();
@@ -134,6 +133,18 @@ public:
 				lua_pushnumber(L, sprite.sprite.getPosition().x);
 				lua_setglobal(L, "playerX");
 				if (luaL_dofile(L, "luaScripts/screenHandler.lua") != LUA_OK)
+				{
+					std::cout << "Error!\n";
+				}
+			}
+
+			if (sprite.sprite.getPosition().x < 0 || (sprite.sprite.getPosition().x + 48) > WINDOWWIDTH)
+			{
+				lua_pushnumber(L, sprite.sprite.getPosition().x);
+				lua_setglobal(L, "playerX");
+				lua_pushnumber(L, sprite.sprite.getPosition().y);
+				lua_setglobal(L, "playerY");
+				if (luaL_dofile(L, "luaScripts/windowBounds.lua") != LUA_OK)
 				{
 					std::cout << "Error!\n";
 				}
