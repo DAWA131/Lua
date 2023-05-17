@@ -14,6 +14,10 @@ if gameMode == 2 then
 		--input spwan pos
 		scene.SetPosition(playerEntity, 250, 580)
 		scene.RemoveComponent(playerEntity, "jump")
+		scene.RemoveComponent(playerEntity, "move")
+		fallSpeed = 2.0
+		jumpHeight = 0.0
+		direction = 0.0
 
 		scene.RemoveTile(0, 0)
 		dofile("luaScripts/maploader.lua")

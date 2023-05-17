@@ -119,12 +119,28 @@ int main()
 	luaL_dofile(L, "luaScripts/newScreen.lua");
 	dumpError(L);
 
+	bool wasOutOfFucus = false;
 
 	while (window->isOpen())
 	{
 		if (window->getSize().x != 768 || window->getSize().y != 816) {
 			// Reset the window size to the initial size
 			window->setSize(sf::Vector2u(768, 816));
+		}
+
+		if (!window->hasFocus())
+		{
+			wasOutOfFucus = true;
+	
+		}
+		if (window->hasFocus() && wasOutOfFucus)
+		{
+			lua_pushinteger(L, -2);
+			lua_setglobal(L, "key");
+			lua_pushboolean(L, true);
+			lua_setglobal(L, "moving");
+			luaL_dofile(L, "luaScripts/keyinput.lua");
+			wasOutOfFucus = false;
 		}
 
 		sf::Event event;
@@ -171,6 +187,7 @@ int main()
 				luaL_dofile(L, "luaScripts/keyHandler.lua");
 			}
 		}
+
 		scene.UpdateSystems(1);
 		dumpError(L);
 		limitFPS(60);

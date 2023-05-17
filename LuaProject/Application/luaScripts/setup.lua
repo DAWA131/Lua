@@ -12,6 +12,7 @@ onceMore = false
 currentLevel = 1
 gameMode = 1
 jumpHeight = 0.0
+fallSpeed = -5.0
 
 --dofile("luaScripts/fileReader.lua")
 --dofile("luaScripts/maploader.lua")

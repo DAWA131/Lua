@@ -1,6 +1,17 @@
 local speed = 7.0
 
 -- Checking for two inputs
+if key == -2 then
+    key1 = -1
+    key2 = -1
+    scene.RemoveComponent(playerEntity, "stop")
+    return
+end
+
+if key ~= A and key ~= SPACE and key ~= D then
+return
+end
+
 if moving == true and key1 == -1 then
     key1 = key
 elseif moving == true and key1 ~= -1 and key2 == -1 and key1 ~= key then
@@ -59,6 +70,8 @@ end
 if moving == false then
     if key == SPACE then
         if scene.HasComponent(playerEntity, "jump") == false then
+            key1 = -1
+            key2 = -1
             jumpHeight = force
             force = 10.0
             scene.SetComponent(playerEntity, "jump", direction, jumpHeight)
