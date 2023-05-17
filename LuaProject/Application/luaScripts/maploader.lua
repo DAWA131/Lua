@@ -28,10 +28,10 @@ while line ~= nil do
                 else 
                     local entity = scene.CreateEntity()
                     scene.SetComponent(entity, "drawable", "Overworld/" .. sub .. ".png" , currentX, currentY);
-                    if sub ~= "9" then 
+                    if sub ~= "8" then 
                         scene.SetComponent(entity, "collidable", true)
                     end
-                    if sub == "9" then
+                    if sub == "8" then
                         scene.SetComponent(entity, "win", true)
                     end
                 end
@@ -43,4 +43,3 @@ while line ~= nil do
     currentX = 0;
     currentY = currentY + ofset;
 end
-

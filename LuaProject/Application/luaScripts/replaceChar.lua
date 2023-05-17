@@ -22,7 +22,7 @@ function replaceChar(file_path, x, y, replacement_char)
     t = tonumber(t);
     print(t)
     t = t + 1;
-    t = t % 8;
+    t = t % 9;
     print(t)
     --replacement_char = y;
     --if y ~= 0 then Istile = "a" replacement_char = 0 end

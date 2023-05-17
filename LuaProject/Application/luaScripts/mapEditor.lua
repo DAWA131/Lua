@@ -11,7 +11,7 @@ if key == 69 and currentLevel ~= 1 then
 local tileX = math.floor(mouseX / 48)
 local tileY = math.floor(mouseY / 48)
 
-if tileY <= 2 then
+if tileY <= 1 then
 	return
 end
 

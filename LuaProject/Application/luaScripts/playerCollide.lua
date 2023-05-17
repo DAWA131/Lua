@@ -14,7 +14,9 @@ if platformY + 20 > playerY and (playerX + 30) > platformX and platformY > playe
 	if once == false then
 		once = true
 		scene.RemoveComponent(playerEntity, "jump")
+		scene.RemoveComponent(playerEntity, "stop")
 		scene.SetComponent(playerEntity, "move", playerX, platformY - (pHeight - 1.0), true)
+		jumpHeight = 0.0
 		if (platformX + 10) > playerX then
 			direction = 0.0
 		end

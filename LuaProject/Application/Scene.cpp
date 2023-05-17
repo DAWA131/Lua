@@ -129,6 +129,8 @@ int Scene::lua_HasComponent(lua_State* L)
 		hasComponent = scene->HasComponents<Poison>(entity);
 	else if (type == "jump")
 		hasComponent = scene->HasComponents<Jumping>(entity);
+	else if (type == "stop")
+		hasComponent = scene->HasComponents<Stopping>(entity);
 
 	lua_pushboolean(L, hasComponent);
 	return 1;
