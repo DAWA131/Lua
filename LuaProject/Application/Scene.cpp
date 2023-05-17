@@ -215,6 +215,7 @@ int Scene::lua_SetComponent(lua_State* L)
 	else if (type == "stop")
 	{
 		scene->SetComponent<Stopping>(entity);
+	}
 	else if (type == "win")
 	{
 		bool coll = lua_toboolean(L, 3);
