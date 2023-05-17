@@ -173,7 +173,7 @@ int main()
 		}
 		scene.UpdateSystems(1);
 		dumpError(L);
-		//limitFPS(60);
+		limitFPS(60);
 	}
 
 	delete window;

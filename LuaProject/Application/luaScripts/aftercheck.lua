@@ -8,6 +8,6 @@ end
 
 -- Making sure the player comes down from a jump
 if scene.HasComponent(playerEntity, "jump") == true then
-		jumpHeight = jumpHeight - 0.03
+		jumpHeight = jumpHeight - 0.8
 		scene.SetComponent(playerEntity, "jump", direction, jumpHeight)
 end
